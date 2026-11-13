@@ -8,10 +8,6 @@ Complete design and implementation reference for the Rajashon Hospital & Diagnos
 
 ![Desktop demo](./Demo.png)
 
-### Mobile
-
-![Mobile demo](./Demo%20Mobile.png)
-
 ## Project overview
 
 - **Framework:** Astro 7, static output
