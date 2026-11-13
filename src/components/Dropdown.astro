@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+import T from './T.astro';
+import type { Bi } from '../lib/i18n';
+interface Opt { value: string; label: Bi; count?: number; sub?: Bi }
+interface Props { id: string; options: Opt[]; selected?: string; caption?: Bi; class?: string }
+const { id, options, selected = options[0]?.value, caption, class: cls = '' } = Astro.props;
+const cur = options.find((o) => o.value === selected) ?? options[0];
+---
+<div class={`dd ${cls}`} data-dd id={id} data-value={cur.value}>
+  {caption && <span class="dd-cap"><T t={caption} /></span>}
+  <button type="button" class="dd-btn" aria-haspopup="listbox" aria-expanded="false">
+    <span class="dd-cur"><T t={cur.label} /></span>
+    <Icon name="chevd" size={18} class="dd-chev" />
+  </button>
+  <ul class="dd-panel" role="listbox" hidden>
+    {options.map((o) => (
+      <li role="presentation">
+        <button type="button" role="option" class="dd-opt" data-value={o.value} aria-selected={o.value === cur.value ? 'true' : 'false'}>
+          <span class="dd-text"><T t={o.label} />{o.sub && <small><T t={o.sub} /></small>}</span>
+          {o.count !== undefined && <em class="dd-count">{o.count}</em>}
+          <Icon name="check" size={16} class="dd-tick" />
+        </button>
+      </li>
+    ))}
+  </ul>
+</div>
+<script>
+  import '../scripts/dropdown.ts';
+</script>

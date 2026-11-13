@@ -1,0 +1,28 @@
+---
+import { images } from '../data/site';
+import Icon from './Icon.astro';
+import T from './T.astro';
+---
+<div class="slider" data-slider>
+  <div class="slider-frame">
+    {images.slides.map((s, i) => (
+      <figure class:list={['slide', { 'is-active': i === 0 }]} aria-hidden={i === 0 ? 'false' : 'true'}>
+        <img src={s.src} alt={s.title.en} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
+        <figcaption>
+          <strong><T t={s.title} /></strong>
+          <span><T t={s.text} /></span>
+        </figcaption>
+      </figure>
+    ))}
+    <div class="slider-ctl">
+      <button type="button" class="icon-btn" data-prev data-aria-en="Previous photo" data-aria-bn="আগের ছবি" aria-label="Previous photo"><Icon name="chevl" /></button>
+      <button type="button" class="icon-btn" data-next data-aria-en="Next photo" data-aria-bn="পরের ছবি" aria-label="Next photo"><Icon name="chevr" /></button>
+    </div>
+  </div>
+  <div class="slider-dots" role="tablist">
+    {images.slides.map((_, i) => <button type="button" role="tab" data-dot={i} aria-selected={i === 0 ? 'true' : 'false'} aria-label={`Photo ${i + 1}`}></button>)}
+  </div>
+</div>
+<script>
+  import '../scripts/slider.ts';
+</script>

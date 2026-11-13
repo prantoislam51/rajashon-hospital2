@@ -1,0 +1,19 @@
+---
+import T from './T.astro';
+import type { Bi } from '../lib/i18n';
+interface Props {
+  label: Bi; name: string; type?: string; required?: boolean; placeholder?: Bi;
+  pattern?: string; inputmode?: string; autocomplete?: string; rows?: number; min?: number; max?: number; hint?: Bi; class?: string;
+}
+const { label, name, type = 'text', required = false, placeholder, pattern, inputmode, autocomplete, rows, min, max, hint, class: cls = '' } = Astro.props;
+const attrs = {
+  name, required, pattern, inputmode, autocomplete, min, max,
+  'data-l-en': label.en, 'data-l-bn': label.bn,
+  'data-ph-en': placeholder?.en, 'data-ph-bn': placeholder?.bn, placeholder: placeholder?.en,
+};
+---
+<label class={`field ${cls}`}>
+  <span class="field-l"><T t={label} />{required && <i aria-hidden="true">*</i>}</span>
+  {rows ? <textarea {...attrs} rows={rows}></textarea> : <input {...attrs} type={type} />}
+  {hint && <small class="field-h"><T t={hint} /></small>}
+</label>

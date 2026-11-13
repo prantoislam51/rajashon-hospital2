@@ -1,0 +1,29 @@
+---
+import type { Doctor } from '../data/doctors';
+interface Props { doctor: Doctor; eager?: boolean }
+const { doctor, eager = false } = Astro.props;
+const female = doctor.gender === 'f';
+---
+{doctor.photo ? (
+  <img class="portrait-img" src={doctor.photo} alt={doctor.name.en} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+) : (
+  <svg class="portrait-svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label={doctor.name.en}>
+    <rect width="400" height="500" class="p-bg" />
+    <circle cx="200" cy="230" r="165" class="p-halo" />
+    {female && <path d="M132 255c-10 52 2 96 20 116l30-22c-20-30-26-58-24-94z" fill="#241c18" />}
+    {female && <path d="M268 255c10 52-2 96-20 116l-30-22c20-30 26-58 24-94z" fill="#241c18" />}
+    <path d="M36 500c0-96 70-150 164-156 94 6 164 60 164 156z" fill="#f6f9f8" />
+    <path d="M158 346 200 436 242 346z" fill="#0a6b66" />
+    <path d="M158 346 200 446 150 500H108zM242 346 200 446 250 500h42z" fill="#dfe9e6" />
+    <rect x="176" y="296" width="48" height="62" rx="22" fill="#b98763" />
+    <ellipse cx="200" cy="238" rx="60" ry="73" fill="#c99a77" />
+    {female
+      ? <path d="M136 240c-8-78 34-106 66-106 44 0 68 32 62 106-8-34-26-52-64-52-34 0-54 18-64 52z" fill="#241c18" />
+      : <path d="M139 232c-6-70 36-92 68-92 40 0 62 28 56 92-10-30-26-42-62-42-32 0-52 12-62 42z" fill="#241c18" />}
+    <path d="M152 348c-10 50 18 92 48 92s58-42 48-92" fill="none" stroke="#12302f" stroke-width="7" stroke-linecap="round" opacity=".85" />
+    <circle cx="248" cy="350" r="9" fill="#12302f" opacity=".85" />
+    <path d="M178 258q22 16 44 0" fill="none" stroke="#7a4f37" stroke-width="4" stroke-linecap="round" />
+    <circle cx="180" cy="236" r="4" fill="#2a1d16" />
+    <circle cx="220" cy="236" r="4" fill="#2a1d16" />
+  </svg>
+)}

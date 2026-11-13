@@ -1,10 +1,73 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import L from '../components/L.astro';
-import { site as s } from '../data/site.js';
-import { u, tel } from '../lib/i18n.js';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
+import { reportKinds } from '../data/services';
+import { reportTimes } from '../data/tests';
+import { site } from '../data/site';
+
+const times = [
+  { k: 'I', what: { en: 'X-ray, ultrasound, ECG', bn: 'এক্স-রে, আল্ট্রাসাউন্ড, ইসিজি' } },
+  { k: 'H1', what: { en: 'Blood sugar, urgent tests', bn: 'ব্লাড সুগার, জরুরি টেস্ট' } },
+  { k: 'S', what: { en: 'CBC, urine, liver, kidney, lipid', bn: 'সিবিসি, ইউরিন, লিভার, কিডনি, লিপিড' } },
+  { k: 'D1', what: { en: 'Hormones, vitamins, tumor markers', bn: 'হরমোন, ভিটামিন, টিউমার মার্কার' } },
+  { k: 'D3', what: { en: 'Culture & sensitivity', bn: 'কালচার ও সেনসিটিভিটি' } },
+];
+const faq = [
+  { q: { en: 'How do I collect my report?', bn: 'রিপোর্ট কীভাবে নেব?' }, a: { en: 'Show your receipt at the report counter. If you cannot come, call us and we can send a copy on WhatsApp.', bn: 'রিপোর্ট কাউন্টারে রশিদ দেখান। আসতে না পারলে কল করুন, আমরা হোয়াটসঅ্যাপে কপি পাঠাতে পারি।' } },
+  { q: { en: 'Do I need to fast before blood tests?', bn: 'রক্ত পরীক্ষার আগে কি খালি পেটে থাকতে হবে?' }, a: { en: 'Only for some tests such as fasting sugar and lipid profile. Each test on our price list shows its preparation.', bn: 'শুধু কিছু টেস্টে, যেমন ফাস্টিং সুগার ও লিপিড প্রোফাইল। মূল্যতালিকায় প্রতিটি টেস্টের প্রস্তুতি দেওয়া আছে।' } },
+  { q: { en: 'Who explains my report?', bn: 'রিপোর্ট কে ব্যাখ্যা করবেন?' }, a: { en: 'Please show it to your treating doctor. Reports are not a diagnosis on their own.', bn: 'অনুগ্রহ করে চিকিৎসক ডাক্তারকে দেখান। রিপোর্ট নিজে থেকে রোগনির্ণয় নয়।' } },
+  { q: { en: 'Can I get a home sample collection?', bn: 'বাসা থেকে নমুনা নেওয়া যায় কি?' }, a: { en: 'For elderly and bed-bound patients we can arrange it. Call to confirm.', bn: 'বয়স্ক ও শয্যাশায়ী রোগীর জন্য ব্যবস্থা করা যায়। নিশ্চিত হতে কল করুন।' } },
+];
 ---
-<Layout title={u.rep} sub={u.rsub}>
-<section><div class="wrap"><ul class="rl">{s.reports.map(r => <li><L o={r} />{r.time && <em><L o={r.time} /></em>}</li>)}</ul>
-<p class="more"><a class="btn red" href={tel(s.phones[0])}><L k="serial" />: {s.phones[0]}</a></p></div></section>
-</Layout>
+<Base title={{ en: 'Reports', bn: 'রিপোর্ট' }}>
+  <PageHero title={{ en: 'Reports', bn: 'রিপোর্ট' }} lead={{ en: 'What reports we prepare, how long they take and how to collect them.', bn: 'আমরা কী কী রিপোর্ট দিই, কত সময় লাগে এবং কীভাবে নেবেন।' }} />
+
+  <section class="section section-flush">
+    <div class="wrap">
+      <SectionHead eyebrow={{ en: 'Report types', bn: 'রিপোর্টের ধরন' }} title={{ en: 'Reports we provide', bn: 'আমরা যেসব রিপোর্ট দিই' }} />
+      <ul class="rk-grid rk-grid--3">
+        {reportKinds.map((r) => (
+          <li class="rk rk--card reveal"><span class="rk-ic"><Icon name={r.icon} size={22} /></span><div><strong><T t={r.title} /></strong><small><T t={r.text} /></small></div></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-tint">
+    <div class="wrap split split--even">
+      <div>
+        <SectionHead eyebrow={{ en: 'Timing', bn: 'সময়' }} title={{ en: 'When to expect your report', bn: 'রিপোর্ট কখন পাবেন' }} />
+        <ul class="times">
+          {times.map((t) => (
+            <li><span class="times-k"><T t={reportTimes[t.k]} /></span><span class="times-v"><T t={t.what} /></span></li>
+          ))}
+        </ul>
+        <p class="tx-note"><Icon name="info" size={16} /><span class="l-en">Times are typical for normal working hours. Exact time is printed on your receipt.</span><span class="l-bn">সময়গুলো স্বাভাবিক কর্মঘণ্টার জন্য। নির্দিষ্ট সময় রশিদে লেখা থাকে।</span></p>
+        <a class="btn btn-soft" href="/tests"><T en="See time for each test" bn="প্রতিটি টেস্টের সময় দেখুন" /> <Icon name="arrow" size={18} /></a>
+      </div>
+      <div>
+        <SectionHead eyebrow={{ en: 'Collection', bn: 'রিপোর্ট সংগ্রহ' }} title={{ en: 'How to collect', bn: 'কীভাবে সংগ্রহ করবেন' }} />
+        <ol class="collect">
+          <li><span>1</span><div><strong><T en="At the counter" bn="কাউন্টারে" /></strong><small><T en="Bring your receipt and a phone number." bn="রশিদ ও ফোন নম্বর সঙ্গে আনুন।" /></small></div></li>
+          <li><span>2</span><div><strong><T en="On WhatsApp" bn="হোয়াটসঅ্যাপে" /></strong><small><T en="Send your receipt number and we reply with a copy." bn="রশিদ নম্বর পাঠান, আমরা কপি পাঠিয়ে দেব।" /></small></div></li>
+          <li><span>3</span><div><strong><T en="Show your doctor" bn="ডাক্তারকে দেখান" /></strong><small><T en="Your doctor interprets the report with your history." bn="আপনার ইতিহাসসহ ডাক্তার রিপোর্ট ব্যাখ্যা করবেন।" /></small></div></li>
+        </ol>
+        <a class="btn btn-primary" href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} /> <T en="Ask on WhatsApp" bn="হোয়াটসঅ্যাপে জানুন" /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <SectionHead eyebrow={{ en: 'FAQ', bn: 'সাধারণ প্রশ্ন' }} title={{ en: 'Common questions', bn: 'সচরাচর জিজ্ঞাসা' }} center />
+      <div class="faq">
+        {faq.map((f) => (
+          <details class="reveal"><summary><T t={f.q} /><Icon name="chevd" size={18} /></summary><p><T t={f.a} /></p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

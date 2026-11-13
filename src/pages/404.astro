@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import T from '../components/T.astro';
+---
+<Base title={{ en: 'Page not found', bn: 'পেজ পাওয়া যায়নি' }}>
+  <section class="section"><div class="wrap wrap--narrow" style="text-align:center">
+    <p class="eyebrow">404</p>
+    <h1><T en="This page does not exist" bn="এই পেজটি নেই" /></h1>
+    <p class="lead"><T en="The link may be old. Let’s take you home." bn="লিংকটি পুরনো হতে পারে। চলুন হোমে ফিরি।" /></p>
+    <a class="btn btn-primary" href="/"><T en="Go to home" bn="হোমে যান" /></a>
+  </div></section>
+</Base>

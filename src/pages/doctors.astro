@@ -1,20 +1,81 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import L from '../components/L.astro';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
 import DoctorCard from '../components/DoctorCard.astro';
-import { site as s } from '../data/site.js';
-import { days, u } from '../lib/i18n.js';
+import Dropdown from '../components/Dropdown.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
+import { doctors, specialties } from '../data/doctors';
+import { DAYS } from '../lib/i18n';
+
+const specOpts = [
+  { value: 'all', label: { en: 'All specialties', bn: 'সব বিভাগ' }, count: doctors.length },
+  ...specialties
+    .filter((s) => doctors.some((d) => d.spec === s.key))
+    .map((s) => ({ value: s.key, label: s.label, count: doctors.filter((d) => d.spec === s.key).length })),
+];
+const dayOpts = [
+  { value: 'all', label: { en: 'Any day', bn: 'যেকোনো দিন' } },
+  ...DAYS.map((d) => ({ value: String(d.d), label: { en: d.fullEn, bn: d.fullBn }, count: doctors.filter((x) => x.days.includes(d.d)).length })),
+];
 ---
-<Layout title={u.topdoc} sub={u.dsub}>
-<section><div class="wrap">
-  <div class="tabs" id="tabs"><button type="button" data-i="-1" class="on"><L k="all" /></button>{days.map((x,i) => <button type="button" data-i={i}><L o={x} /></button>)}</div>
-  <div class="dgrid">{s.doctors.map(d => <DoctorCard d={d} i={s.doctors.indexOf(d)} />)}</div>
-  <p class="dn" id="dn" hidden><L k="none" /></p>
-</div></section>
-</Layout>
-<script is:inline>
-(function(){var tabs=[].slice.call(document.querySelectorAll('#tabs button')),cards=[].slice.call(document.querySelectorAll('.dcard'));
-function f(i){var n=0;tabs.forEach(function(b){b.classList.toggle('on',+b.dataset.i===i)});
-cards.forEach(function(c){var ok=i<0||c.dataset.d.split(',').indexOf(String(i))>-1;c.hidden=!ok;if(ok)n++});document.getElementById('dn').hidden=n>0}
-tabs.forEach(function(b){b.addEventListener('click',function(){f(+b.dataset.i)})})})();
+<Base title={{ en: 'Doctors', bn: 'ডাক্তার' }}>
+  <PageHero title={{ en: 'Our doctors', bn: 'আমাদের ডাক্তার' }} lead={{ en: 'Find a specialist, see the days they sit and request a serial. Click a doctor for full details.', bn: 'বিশেষজ্ঞ খুঁজুন, তাঁর বসার দিন দেখুন এবং সিরিয়াল নিন। বিস্তারিত দেখতে ডাক্তারের উপর ক্লিক করুন।' }} />
+  <section class="section section-flush">
+    <div class="wrap" data-dfilter>
+      <div class="tx-bar">
+        <label class="tx-search">
+          <Icon name="search" size={20} />
+          <input type="search" data-q autocomplete="off" placeholder="Search by name or specialty" data-ph-en="Search by name or specialty" data-ph-bn="নাম বা বিভাগ দিয়ে খুঁজুন" data-aria-en="Search doctors" data-aria-bn="ডাক্তার খুঁজুন" aria-label="Search doctors" />
+        </label>
+        <Dropdown id="spec-dd" options={specOpts} class="tx-dd" caption={{ en: 'Specialty', bn: 'বিভাগ' }} />
+        <Dropdown id="day-dd" options={dayOpts} class="tx-dd" caption={{ en: 'Available on', bn: 'যেদিন বসেন' }} />
+      </div>
+      <p class="tx-meta" aria-live="polite">
+        <span class="l-en"><b data-n>{doctors.length}</b> doctors</span><span class="l-bn"><b data-nb>{doctors.length}</b> জন ডাক্তার</span>
+      </p>
+      <div class="dgrid dgrid--page" data-grid>
+        {doctors.map((d, i) => <DoctorCard doctor={d} eager={i < 4} />)}
+      </div>
+      <div class="tx-empty" data-empty hidden>
+        <Icon name="search" size={28} />
+        <p><T en="No doctor matches these filters." bn="এই ফিল্টারে কোনো ডাক্তার পাওয়া যায়নি।" /></p>
+        <button type="button" class="btn btn-ghost btn-sm" data-reset><T en="Clear filters" bn="ফিল্টার মুছুন" /></button>
+      </div>
+    </div>
+  </section>
+</Base>
+<script>
+  import { setDropdown } from '../scripts/dropdown';
+  const BN = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+  const toBn = (n: number) => String(n).replace(/\d/g, (d) => BN[+d]);
+  const root = document.querySelector<HTMLElement>('[data-dfilter]');
+  if (root) {
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-doctor]')];
+    const q = root.querySelector<HTMLInputElement>('[data-q]')!;
+    const spec = root.querySelector<HTMLElement>('#spec-dd')!;
+    const day = root.querySelector<HTMLElement>('#day-dd')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const apply = () => {
+      const words = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      let n = 0;
+      cards.forEach((c) => {
+        const ok =
+          (spec.dataset.value === 'all' || c.dataset.spec === spec.dataset.value) &&
+          (day.dataset.value === 'all' || c.dataset.days!.split(',').includes(day.dataset.value!)) &&
+          words.every((w) => c.dataset.search!.includes(w));
+        c.hidden = !ok;
+        if (ok) n++;
+      });
+      root.querySelector('[data-n]')!.textContent = String(n);
+      root.querySelector('[data-nb]')!.textContent = toBn(n);
+      empty.hidden = n !== 0;
+    };
+    q.addEventListener('input', apply);
+    root.addEventListener('dd-change', apply);
+    root.querySelector('[data-reset]')?.addEventListener('click', () => { q.value = ''; setDropdown(spec, 'all', true); setDropdown(day, 'all', true); apply(); });
+    const s = new URLSearchParams(location.search).get('spec');
+    if (s) setDropdown(spec, s, true);
+    apply();
+  }
 </script>

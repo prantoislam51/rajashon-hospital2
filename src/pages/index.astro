@@ -1,41 +1,160 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import L from '../components/L.astro';
+import Base from '../layouts/Base.astro';
+import HeroSlider from '../components/HeroSlider.astro';
+import SectionHead from '../components/SectionHead.astro';
 import DoctorCard from '../components/DoctorCard.astro';
-import { site as s } from '../data/site.js';
-import { img, tel } from '../lib/i18n.js';
+import TestsPreview from '../components/TestsPreview.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
+import { site, images } from '../data/site';
+import { doctors } from '../data/doctors';
+import { tests } from '../data/tests';
+import { services, reportKinds } from '../data/services';
+import { num } from '../lib/i18n';
+
+const top = doctors.filter((d) => d.featured).slice(0, 4);
+const nDoc = num(doctors.length);
+const nTests = num(`${Math.floor(tests.length / 10) * 10}`);
 ---
-<Layout>
-<section class="hero" style="padding:0"><div class="wrap">
-  <div class="ht"><h1><L o={s.hero.title} /></h1><p><L o={s.hero.text} /></p>
-    <div class="row"><a class="btn main" href="/appointment"><L k="book" /></a><a class="btn red" href={tel(s.phones[0])}><L k="serial" /></a></div></div>
-  <div class="slider" id="slider">{s.slides.map((x,i) => <div class={'slide'+(i==0?' on':'')} style={img(x.img)} role="img" aria-label={x.en}><div class="cap"><L o={x} /></div></div>)}
-    <div class="dots">{s.slides.map((_,i) => <i class={i==0?'on':''}></i>)}</div></div>
-</div></section>
-<div class="quick"><div class="wrap">
-  <a href={tel(s.phones[0])}><L k="serial" /><small>{s.phones[0]}</small></a>
-  <a href="/doctors"><L k="topdoc" /><small><L k="alld" /></small></a>
-  <a href="/tests"><L k="tests" /><small><L k="tsub" /></small></a>
-</div></div>
-<section class="about"><div class="wrap">
-  <div class="photo" style={img(s.about.img)} role="img" aria-label="Hospital building"></div>
-  <div><h2><L o={s.about.title} /></h2><p><L o={s.about.text} /></p><a class="btn main" href="/about"><L k="more" /></a></div>
-</div></section>
-<section style="padding-top:0"><div class="wrap"><h2><L k="topdoc" /></h2>
-  <div class="dgrid">{s.doctors.slice(0,3).map(d => <DoctorCard d={d} i={s.doctors.indexOf(d)} />)}</div>
-  <p class="more"><a class="btn" href="/doctors"><L k="alld" /></a></p></div></section>
-<section class="rep"><div class="wrap"><h2><L k="svc" /></h2>
-  <div class="sg">{s.services.map(x => <div class="svc"><L o={x} /></div>)}</div>
-  <p class="more"><a class="btn" href="/services"><L k="alls" /></a></p></div></section>
-<section><div class="wrap"><h2><L k="contact" /></h2><div class="ci">
-  <div><b><L k="serial" /></b>{s.phones.map(p => <a href={tel(p)}>{p}<br/></a>)}</div>
-  <div><b><L k="addr" /></b><L o={s.address} /></div>
-  <a class="btn main" href="/contact" style="justify-self:start"><L k="contact" /></a></div></div></section>
-</Layout>
-<script is:inline>
-(function(){var sl=[].slice.call(document.querySelectorAll('.slide')),dt=[].slice.call(document.querySelectorAll('.dots i')),k=0,tm;
-function go(n){sl[k].classList.remove('on');dt[k].classList.remove('on');k=(n+sl.length)%sl.length;sl[k].classList.add('on');dt[k].classList.add('on')}
-dt.forEach(function(e,i){e.addEventListener('click',function(){go(i)})});
-function run(){if(!matchMedia('(prefers-reduced-motion:reduce)').matches)tm=setInterval(function(){go(k+1)},4500)}
-var s=document.getElementById('slider');run();s.addEventListener('mouseenter',function(){clearInterval(tm)});s.addEventListener('mouseleave',run)})();
-</script>
+<Base title={{ en: 'Home', bn: 'হোম' }} description={{ en: `${site.name.en} — doctors, tests and appointments in Savar, Dhaka.`, bn: site.name.bn }}>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><T en="Savar, Dhaka" bn="সাভার, ঢাকা" /></p>
+        <h1>
+          <T html en="Careful diagnosis,<br/>caring treatment,<br/><em>close to home.</em>" bn="নির্ভুল পরীক্ষা,<br/>যত্নশীল চিকিৎসা,<br/><em>আপনার কাছেই।</em>" />
+        </h1>
+        <p class="lead">
+          <T t={{
+            en: 'Rajashon Hospital & Diagnostic Center brings specialist doctors, a pathology laboratory and imaging together on Birulia Road — with clear serials, fair prices and timely reports.',
+            bn: 'রাজাসন হসপিটাল এন্ড ডায়াগনস্টিক সেন্টারে বিরুলিয়া রোডে একই জায়গায় বিশেষজ্ঞ ডাক্তার, প্যাথলজি ল্যাব ও ইমেজিং — সুস্পষ্ট সিরিয়াল, ন্যায্য মূল্য ও সময়মতো রিপোর্ট।',
+          }} />
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="/appointment"><Icon name="calendar" size={20} /> <T en="Book appointment" bn="অ্যাপয়েন্টমেন্ট নিন" /></a>
+          <a class="btn btn-ghost btn-lg" href="/tests"><T en="Tests & prices" bn="টেস্ট ও মূল্য" /> <Icon name="arrow" size={18} /></a>
+        </div>
+        <a class="hero-call" href={`tel:${site.phones[0].tel}`}>
+          <span class="hero-call-ic"><Icon name="phone" size={20} /></span>
+          <span><small><T en="Serial hotline" bn="সিরিয়ালের জন্য" /></small><strong><T t={site.phones[0].display} /></strong></span>
+        </a>
+      </div>
+      <div class="hero-media"><HeroSlider /></div>
+    </div>
+    <div class="wrap">
+      <ul class="stats reveal">
+        <li><strong><T t={nDoc} />+</strong><span><T en="Specialist doctors" bn="বিশেষজ্ঞ ডাক্তার" /></span></li>
+        <li><strong><T t={nTests} />+</strong><span><T en="Tests available" bn="টেস্ট সুবিধা" /></span></li>
+        <li><strong><T en="7 days" bn="৭ দিন" /></strong><span><T en="Open every week" bn="সপ্তাহজুড়ে খোলা" /></span></li>
+        <li><strong><T en="Same day" bn="একই দিন" /></strong><span><T en="Most routine reports" bn="অধিকাংশ রুটিন রিপোর্ট" /></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section">
+    <div class="wrap about-grid">
+      <div class="about-photo reveal">
+        <img src={images.building} alt={site.name.en} loading="lazy" />
+        <div class="about-badge"><strong><T t={site.short} /></strong><span><T t={site.sub} /></span></div>
+      </div>
+      <div class="about-copy reveal">
+        <p class="eyebrow"><T en="About us" bn="আমাদের সম্পর্কে" /></p>
+        <h2><T en="One building for your doctor, your tests and your reports." bn="ডাক্তার, পরীক্ষা ও রিপোর্ট — সবকিছু একই ভবনে।" /></h2>
+        <p><T t={{
+          en: 'We are located on Birulia Road in Madhya Rajashon, Savar, beside Rajashon Government Primary School. Patients can consult a specialist, get tested and collect the report without travelling across town.',
+          bn: 'আমরা সাভারের মধ্য রাজাসনে বিরুলিয়া রোডে, রাজাসন সরকারী প্রাথমিক বিদ্যালয় সংলগ্ন। বিশেষজ্ঞ দেখানো, পরীক্ষা করানো ও রিপোর্ট নেওয়া — সবকিছু শহরজুড়ে ছোটাছুটি ছাড়াই করা যায়।',
+        }} /></p>
+        <ul class="ticks">
+          <li><Icon name="check" size={18} /><T en="Clear doctor schedules and online serial requests" bn="ডাক্তারের স্পষ্ট সময়সূচি ও অনলাইনে সিরিয়ালের অনুরোধ" /></li>
+          <li><Icon name="check" size={18} /><T en="Published test prices — no surprises at the counter" bn="প্রকাশিত টেস্ট মূল্য — কাউন্টারে অবাক হওয়ার কিছু নেই" /></li>
+          <li><Icon name="check" size={18} /><T en="Pathology, X-ray, ultrasound and ECG in-house" bn="প্যাথলজি, এক্স-রে, আল্ট্রাসাউন্ড ও ইসিজি নিজস্ব ব্যবস্থায়" /></li>
+        </ul>
+        <a class="btn btn-soft" href="/about"><T en="Read more about us" bn="আরও জানুন" /> <Icon name="arrow" size={18} /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOP DOCTORS -->
+  <section class="section section-tint">
+    <div class="wrap">
+      <SectionHead eyebrow={{ en: 'Our doctors', bn: 'আমাদের ডাক্তার' }} title={{ en: 'Meet our specialist doctors', bn: 'আমাদের বিশেষজ্ঞ ডাক্তারগণ' }} href="/doctors" cta={{ en: 'All doctors', bn: 'সব ডাক্তার' }} text={{ en: 'Green days show when each doctor sees patients. Open a profile for degrees and timings.', bn: 'সবুজ দিনগুলোতে ডাক্তার রোগী দেখেন। ডিগ্রি ও সময় দেখতে প্রোফাইল খুলুন।' }} />
+      <div class="dgrid">
+        {top.map((d, i) => <DoctorCard doctor={d} eager={i < 2} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section">
+    <div class="wrap">
+      <SectionHead eyebrow={{ en: 'Contact', bn: 'যোগাযোগ' }} title={{ en: 'Reach us any day of the week', bn: 'সপ্তাহের যেকোনো দিন যোগাযোগ করুন' }} />
+      <div class="cgrid">
+        <article class="ccard reveal">
+          <span class="ccard-ic"><Icon name="phone" size={22} /></span>
+          <h3><T en="Serial & enquiries" bn="সিরিয়াল ও জিজ্ঞাসা" /></h3>
+          <ul>{site.phones.map((p) => <li><a href={`tel:${p.tel}`}><T t={p.display} /></a></li>)}</ul>
+          <a class="link-arrow" href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener"><Icon name="whatsapp" size={17} /> <T en="Chat on WhatsApp" bn="হোয়াটসঅ্যাপে মেসেজ" /></a>
+        </article>
+        <article class="ccard reveal">
+          <span class="ccard-ic"><Icon name="pin" size={22} /></span>
+          <h3><T en="Find us" bn="ঠিকানা" /></h3>
+          <p><T t={site.address} /></p>
+          <p class="muted"><T t={site.landmark} /></p>
+          <a class="link-arrow" href="/contact"><T en="Map & directions" bn="ম্যাপ ও দিকনির্দেশনা" /> <Icon name="arrow" size={17} /></a>
+        </article>
+        <article class="ccard reveal">
+          <span class="ccard-ic"><Icon name="clock" size={22} /></span>
+          <h3><T en="Opening hours" bn="খোলার সময়" /></h3>
+          <ul class="hours">{site.hours.map((h) => <li><strong><T t={h.days} /></strong><span><T t={h.time} /></span></li>)}</ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORTS + TESTS -->
+  <section class="section section-tint">
+    <div class="wrap split">
+      <div>
+        <SectionHead eyebrow={{ en: 'Reports', bn: 'রিপোর্ট' }} title={{ en: 'What we report', bn: 'আমরা যেসব রিপোর্ট দিই' }} href="/reports" cta={{ en: 'About reports', bn: 'রিপোর্ট সম্পর্কে' }} />
+        <ul class="rk-grid">
+          {reportKinds.map((r) => (
+            <li class="rk reveal"><span class="rk-ic"><Icon name={r.icon} size={20} /></span><div><strong><T t={r.title} /></strong><small><T t={r.text} /></small></div></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <SectionHead eyebrow={{ en: 'Tests & prices', bn: 'টেস্ট ও মূল্য' }} title={{ en: 'Popular tests', bn: 'জনপ্রিয় টেস্ট' }} href="/tests" cta={{ en: 'Full price list', bn: 'পূর্ণ মূল্যতালিকা' }} />
+        <TestsPreview />
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section">
+    <div class="wrap">
+      <SectionHead eyebrow={{ en: 'Services', bn: 'সেবা' }} title={{ en: 'Everything a diagnostic centre should offer', bn: 'একটি ডায়াগনস্টিক সেন্টারের প্রয়োজনীয় সব সেবা' }} href="/services" cta={{ en: 'All services', bn: 'সব সেবা' }} />
+      <div class="sgrid">
+        {services.slice(0, 6).map((s) => (
+          <a class="scard reveal" href="/services">
+            <span class="scard-ic"><Icon name={s.icon} size={24} /></span>
+            <h3><T t={s.title} /></h3>
+            <p><T t={s.text} /></p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="wrap">
+    <div class="cta">
+      <div>
+        <h2><T en="Need to see a doctor this week?" bn="এই সপ্তাহে ডাক্তার দেখাতে চান?" /></h2>
+        <p><T en="Choose a doctor, pick a green day and send your request on WhatsApp in under a minute." bn="ডাক্তার বেছে নিন, সবুজ দিন নির্বাচন করুন এবং এক মিনিটেই হোয়াটসঅ্যাপে অনুরোধ পাঠান।" /></p>
+      </div>
+      <a class="btn btn-light btn-lg" href="/appointment"><Icon name="calendar" size={20} /> <T en="Book appointment" bn="অ্যাপয়েন্টমেন্ট নিন" /></a>
+    </div>
+  </section>
+</Base>

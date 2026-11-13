@@ -1,0 +1,15 @@
+---
+import T from './T.astro';
+import Icon from './Icon.astro';
+import type { Bi } from '../lib/i18n';
+interface Props { eyebrow?: Bi; title: Bi; text?: Bi; href?: string; cta?: Bi; center?: boolean }
+const { eyebrow, title, text, href, cta, center = false } = Astro.props;
+---
+<div class:list={['sec-head', { 'is-center': center }]}>
+  <div>
+    {eyebrow && <p class="eyebrow"><T t={eyebrow} /></p>}
+    <h2><T t={title} /></h2>
+    {text && <p class="sec-text"><T t={text} /></p>}
+  </div>
+  {href && cta && <a class="link-arrow" href={href}><T t={cta} /> <Icon name="arrow" size={18} /></a>}
+</div>

@@ -1,0 +1,16 @@
+---
+import { DAYS } from '../lib/i18n';
+interface Props { days: number[]; size?: 'sm' | 'md' }
+const { days, size = 'sm' } = Astro.props;
+---
+<ul class={`days days--${size}`} role="list">
+  {DAYS.map((d) => {
+    const on = days.includes(d.d);
+    return (
+      <li class:list={['day', on ? 'is-on' : 'is-off']} title={`${d.fullEn}${on ? '' : ' — not available'}`}>
+        <span class="l-en">{d.en}</span><span class="l-bn">{d.bn}</span>
+        <span class="sr"><span class="l-en">{on ? ' available' : ' not available'}</span><span class="l-bn">{on ? ' আছেন' : ' নেই'}</span></span>
+      </li>
+    );
+  })}
+</ul>

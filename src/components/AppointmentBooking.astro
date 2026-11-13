@@ -1,0 +1,113 @@
+---
+import { doctors } from '../data/doctors';
+import { site } from '../data/site';
+import Dropdown from './Dropdown.astro';
+import DayChips from './DayChips.astro';
+import DoctorPortrait from './DoctorPortrait.astro';
+import Field from './Field.astro';
+import Icon from './Icon.astro';
+import T from './T.astro';
+
+const options = [
+  { value: '', label: { en: 'Select a doctor', bn: 'ডাক্তার নির্বাচন করুন' } },
+  ...doctors.map((d) => ({ value: d.slug, label: d.name, sub: d.specialty })),
+];
+const data = doctors.map((d) => ({
+  slug: d.slug, name: d.name, spec: d.specialty, days: d.days, time: d.time, fee: d.fee,
+}));
+---
+<div class="book" data-book data-wa={site.whatsapp} data-hosp-en={site.name.en} data-hosp-bn={site.name.bn}>
+  <script is:inline type="application/json" id="book-data" set:html={JSON.stringify(data)} />
+
+  <div class="book-main">
+    <!-- Step 1 -->
+    <section class="bpanel">
+      <header class="bpanel-h"><span class="step">1</span><h2><T en="Choose a doctor" bn="ডাক্তার নির্বাচন করুন" /></h2></header>
+      <Dropdown id="doc-dd" options={options} selected="" class="dd-wide" />
+      <div class="dsum-wrap">
+        {doctors.map((d) => (
+          <div class="dsum" data-sum={d.slug} hidden>
+            <div class="dsum-photo"><DoctorPortrait doctor={d} /></div>
+            <div class="dsum-body">
+              <strong><T t={d.name} /></strong>
+              <span class="dsum-spec"><T t={d.specialty} /></span>
+              <span class="dsum-deg"><T t={d.degrees} /></span>
+              <DayChips days={d.days} />
+              <span class="dsum-time"><Icon name="clock" size={15} /> <T t={d.time} /></span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Step 2 -->
+    <section class="bpanel" data-step2>
+      <header class="bpanel-h"><span class="step">2</span><h2><T en="Pick a date" bn="তারিখ নির্বাচন করুন" /></h2></header>
+      <div class="cal-lock" data-lock>
+        <Icon name="calendar" size={22} />
+        <p><T en="Select a doctor first to see the available days." bn="আগে ডাক্তার নির্বাচন করুন, তাহলে সিরিয়ালের উপলব্ধ দিনগুলো দেখা যাবে।" /></p>
+      </div>
+      <div class="cal" data-cal hidden>
+        <div class="cal-top">
+          <button type="button" class="icon-btn" data-prev data-aria-en="Previous month" data-aria-bn="আগের মাস" aria-label="Previous month"><Icon name="chevl" /></button>
+          <div class="cal-sel">
+            <select data-month aria-label="Month"></select>
+            <select data-year aria-label="Year"></select>
+          </div>
+          <button type="button" class="icon-btn" data-next data-aria-en="Next month" data-aria-bn="পরের মাস" aria-label="Next month"><Icon name="chevr" /></button>
+        </div>
+        <div class="cal-week" aria-hidden="true"></div>
+        <div class="cal-grid" role="grid"></div>
+        <div class="cal-foot">
+          <ul class="legend">
+            <li><i class="lg lg-on"></i><T en="Doctor available" bn="ডাক্তার আছেন" /></li>
+            <li><i class="lg lg-off"></i><T en="Not available" bn="নেই" /></li>
+            <li><i class="lg lg-sel"></i><T en="Selected" bn="নির্বাচিত" /></li>
+          </ul>
+          <button type="button" class="btn btn-soft btn-sm" data-next-avail><Icon name="calendar" size={16} /> <span data-next-label></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3 -->
+    <section class="bpanel" data-step3>
+      <header class="bpanel-h"><span class="step">3</span><h2><T en="Patient details" bn="রোগীর তথ্য" /></h2></header>
+      <form class="bform" data-form novalidate>
+        <Field label={{ en: 'Patient name', bn: 'রোগীর নাম' }} name="name" required autocomplete="name" placeholder={{ en: 'Full name', bn: 'পূর্ণ নাম' }} />
+        <Field label={{ en: 'Mobile number', bn: 'মোবাইল নম্বর' }} name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder={{ en: '01XXXXXXXXX', bn: '01XXXXXXXXX' }} />
+        <Field label={{ en: 'Age', bn: 'বয়স' }} name="age" type="number" required inputmode="numeric" min={0} max={120} placeholder={{ en: 'Years', bn: 'বছর' }} class="field-age" />
+        <p class="form-msg" data-msg role="alert" hidden></p>
+        <button class="btn btn-primary btn-lg" type="submit"><Icon name="whatsapp" size={20} /> <T en="Submit via WhatsApp" bn="হোয়াটসঅ্যাপে সাবমিট করুন" /></button>
+        <p class="form-hint"><T en="Your details open in WhatsApp as a ready message. We reply to confirm your serial." bn="আপনার তথ্য হোয়াটসঅ্যাপে তৈরি মেসেজ হিসেবে খুলবে। আমরা সিরিয়াল নিশ্চিত করে জানাব।" /></p>
+      </form>
+      <div class="book-done" data-done hidden>
+        <span class="done-ic"><Icon name="check" size={26} /></span>
+        <h3><T en="Request ready on WhatsApp" bn="অনুরোধ হোয়াটসঅ্যাপে প্রস্তুত" /></h3>
+        <p><T en="Press send in WhatsApp to finish. If it did not open, use the button below." bn="শেষ করতে হোয়াটসঅ্যাপে সেন্ড চাপুন। না খুললে নিচের বাটন ব্যবহার করুন।" /></p>
+        <a class="btn btn-primary" data-wa-link href="#" target="_blank" rel="noopener"><Icon name="whatsapp" size={18} /> <T en="Open WhatsApp" bn="হোয়াটসঅ্যাপ খুলুন" /></a>
+      </div>
+    </section>
+  </div>
+
+  <aside class="book-aside">
+    <div class="sumcard">
+      <h3><T en="Your appointment" bn="আপনার অ্যাপয়েন্টমেন্ট" /></h3>
+      <dl>
+        <div><dt><Icon name="user" size={16} /><T en="Doctor" bn="ডাক্তার" /></dt><dd data-s-doc>—</dd></div>
+        <div><dt><Icon name="calendar" size={16} /><T en="Date" bn="তারিখ" /></dt><dd data-s-date>—</dd></div>
+        <div><dt><Icon name="clock" size={16} /><T en="Time" bn="সময়" /></dt><dd data-s-time>—</dd></div>
+        <div><dt><Icon name="tag" size={16} /><T en="Fee" bn="ফি" /></dt><dd data-s-fee>—</dd></div>
+      </dl>
+    </div>
+    <div class="helpcard">
+      <h3><T en="Prefer to call?" bn="কল করতে চান?" /></h3>
+      <p><T en="Call us for a serial or to change an appointment." bn="সিরিয়াল নিতে বা পরিবর্তন করতে কল করুন।" /></p>
+      <ul>
+        {site.phones.map((p) => <li><a href={`tel:${p.tel}`}><Icon name="phone" size={16} /> <T t={p.display} /></a></li>)}
+      </ul>
+    </div>
+  </aside>
+</div>
+<script>
+  import '../scripts/appointment.ts';
+</script>

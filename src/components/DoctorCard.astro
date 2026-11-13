@@ -1,25 +1,66 @@
 ---
-import L from './L.astro';
-import { img, days } from '../lib/i18n.js';
-const { d, i } = Astro.props;
-const full = `background-image:url(/images/${d.img.replace('.jpg','-full.jpg')}),url(/images/${d.img}),linear-gradient(135deg,#0b5d3b,#083b2a)`;
+import type { Doctor } from '../data/doctors';
+import { num } from '../lib/i18n';
+import { taka } from '../lib/i18n';
+import Icon from './Icon.astro';
+import T from './T.astro';
+import DayChips from './DayChips.astro';
+import DoctorPortrait from './DoctorPortrait.astro';
+import { site } from '../data/site';
+
+interface Props { doctor: Doctor; eager?: boolean }
+const { doctor: d, eager = false } = Astro.props;
+const id = `dr-${d.slug}`;
+const exp = num(d.experience);
 ---
-<article class="dcard" data-m={`m${i}`} data-d={d.d.join(',')}>
-  <div class="dph" style={img(d.img)} role="img" aria-label={d.name.en}></div>
-  <div class="dbody">
-    <h3><L o={d.name} /></h3><span class="sp"><L o={d.specialty} /></span>
-    <div class="mini">{days.map((x,k) => <span class={d.d.includes(k)?'on':''}><L o={x} /></span>)}</div>
-    <a class="btn main" href={`/appointment?doctor=${i}`}><L k="book" /></a>
-    <button type="button" class="lnk"><L k="det" /></button>
+<article class="dcard reveal" data-doctor data-spec={d.spec} data-days={d.days.join(',')}
+  data-search={`${d.name.en} ${d.name.bn} ${d.specialty.en} ${d.specialty.bn} ${d.degrees.en}`.toLowerCase()}>
+  <div class="dcard-photo"><DoctorPortrait doctor={d} eager={eager} /></div>
+  <div class="dcard-body">
+    <p class="dcard-spec"><T t={d.specialty} /></p>
+    <h3 class="dcard-name">
+      <button type="button" class="dcard-open" data-dr-open={id}><T t={d.name} /></button>
+    </h3>
+    <p class="dcard-deg"><T t={d.degrees} /></p>
+    <DayChips days={d.days} />
+    <p class="dcard-time"><Icon name="clock" size={15} /> <T t={d.time} /></p>
+    <div class="dcard-actions">
+      <a class="btn btn-primary btn-sm" href={`/appointment?doctor=${d.slug}`}><T en="Book" bn="সিরিয়াল নিন" /></a>
+      <button type="button" class="btn btn-ghost btn-sm" data-dr-open={id}><T en="Profile" bn="বিস্তারিত" /></button>
+    </div>
   </div>
 </article>
-<dialog class="dmod" id={`m${i}`}><div class="dm">
-  <div class="dmp" style={full} role="img" aria-label={d.name.en}></div>
-  <div class="dmi"><button type="button" class="x" data-close aria-label="Close">×</button>
-    <h2><L o={d.name} /></h2><span class="sp"><L o={d.specialty} /></span>
-    <span class="lb"><L k="deg" /></span><div><L o={d.degrees} />{d.bmdc && <div><L k="bmdc" />: {d.bmdc}</div>}</div>
-    <span class="lb"><L k="cdays" /></span><div class="mini big">{days.map((x,k) => <span class={d.d.includes(k)?'on':''}><L o={x} /></span>)}</div>
-    <span class="lb"><L k="tm" /></span><div><L o={d.time} /></div>
-    <a class="btn main" href={`/appointment?doctor=${i}`}><L k="book" /></a>
+
+<dialog class="dmodal" id={id} aria-labelledby={`${id}-t`}>
+  <div class="dm-in">
+    <button type="button" class="dm-close icon-btn" data-dr-close data-aria-en="Close" data-aria-bn="বন্ধ করুন" aria-label="Close"><Icon name="close" /></button>
+    <div class="dm-photo"><DoctorPortrait doctor={d} /></div>
+    <div class="dm-body">
+      <p class="dm-spec"><T t={d.specialty} /></p>
+      <h2 id={`${id}-t`}><T t={d.name} /></h2>
+      <p class="dm-desig"><T t={d.designation} /></p>
+
+      <dl class="dm-facts">
+        <div><dt><Icon name="cap" size={17} /><T en="Degrees" bn="ডিগ্রি" /></dt><dd><T t={d.degrees} /></dd></div>
+        <div><dt><Icon name="stethoscope" size={17} /><T en="Specialty" bn="বিশেষজ্ঞতা" /></dt><dd><T t={d.specialty} /></dd></div>
+        <div><dt><Icon name="award" size={17} /><T en="Experience" bn="অভিজ্ঞতা" /></dt><dd><T en={`${exp.en}+ years`} bn={`${exp.bn}+ বছর`} /></dd></div>
+        {d.bmdc && <div><dt><Icon name="shield" size={17} /><T en="BMDC Reg. No." bn="বিএমডিসি রেজি. নং" /></dt><dd>{d.bmdc}</dd></div>}
+        {d.fee > 0 && <div><dt><Icon name="tag" size={17} /><T en="Consultation fee" bn="পরামর্শ ফি" /></dt><dd><T t={taka(d.fee)} /></dd></div>}
+      </dl>
+
+      <h3 class="dm-h"><T en="Visiting days & time" bn="রোগী দেখার দিন ও সময়" /></h3>
+      <DayChips days={d.days} size="md" />
+      <p class="dm-time"><Icon name="clock" size={17} /> <T t={d.time} /></p>
+      <p class="dm-about"><T t={d.about} /></p>
+
+      <div class="dm-actions">
+        <a class="btn btn-primary" href={`/appointment?doctor=${d.slug}`}><Icon name="calendar" size={18} /> <T en="Book appointment" bn="অ্যাপয়েন্টমেন্ট নিন" /></a>
+        <a class="btn btn-ghost" href={`tel:${site.phones[0].tel}`}><Icon name="phone" size={18} /> <T en="Call for serial" bn="সিরিয়ালের জন্য কল" /></a>
+      </div>
+    </div>
   </div>
-</div></dialog>
+</dialog>
+
+<script>
+  import '../scripts/doctors.ts';
+</script>

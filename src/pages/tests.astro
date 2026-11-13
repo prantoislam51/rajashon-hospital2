@@ -1,42 +1,19 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import L from '../components/L.astro';
-import { site as s } from '../data/site.js';
-import { u, tel } from '../lib/i18n.js';
-const fmt = (n, l) => '৳ ' + n.toLocaleString(l);
-const count = (k) => s.tests.filter(t => t.cat === k).length;
-const groups = Object.entries(s.testGroups).map(([g, v]) => ({ g, v, cats: Object.entries(s.testCats).filter(([k, c]) => c.g === g && count(k) > 0) })).filter(x => x.cats.length);
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import TestsExplorer from '../components/TestsExplorer.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
 ---
-<Layout title={u.tests} sub={u.tsub}>
-<section><div class="wrap">
-  {s.testsDemo && <div class="demo"><L k="demoN" /></div>}
-  <div class="flt">
-    <input class="srch" id="q" type="search" placeholder="Search / খুঁজুন" aria-label="Search" />
-    <select id="cat" aria-label="Category">
-      <option value="" data-en={u.allc.en} data-bn={u.allc.bn}>{u.allc.en}</option>
-      {groups.map(x => <optgroup label={x.v.en} data-en={x.v.en} data-bn={x.v.bn}>{x.cats.map(([k, c]) => <option value={k} data-en={`${c.en} (${count(k)})`} data-bn={`${c.bn} (${count(k).toLocaleString('bn-BD')})`}>{c.en} ({count(k)})</option>)}</optgroup>)}
-    </select>
-  </div>
-  <p class="cnt" id="cnt"></p>
-  <div class="tw"><table class="tt"><thead><tr><th><L k="tname" /></th><th><L k="cat" /></th><th><L k="tprice" /></th><th><L k="trep" /></th><th><L k="tprep" /></th></tr></thead>
-  <tbody>{s.tests.map(t => <tr data-c={t.cat} data-s={(t.en + ' ' + t.bn + ' ' + s.testCats[t.cat].en + ' ' + s.testCats[t.cat].bn).toLowerCase()}>
-    <td class="nm"><L o={t} /></td>
-    <td><span class="lbl"><L k="cat" /></span><span class="ty"><L o={s.testCats[t.cat]} /></span></td>
-    <td>{t.price == null ? <span class="pr cp"><L k="callp" /></span> : <span class="pr"><Fragment set:html={`<span class="en">${fmt(t.price,'en-US')}</span><span class="bn">${fmt(t.price,'bn-BD')}</span>`} /></span>}</td>
-    <td><span class="lbl"><L k="trep" /></span><span><L o={t.report} /></span></td>
-    <td><span class="lbl"><L k="tprep" /></span><span><L o={t.prep} /></span></td></tr>)}</tbody></table></div>
-  <p class="dn" id="dn" hidden><L k="nores" /></p>
-  <p class="note"><L k="tnote" /> <a href={tel(s.phones[0])}><b>{s.phones[0]}</b></a></p>
-</div></section>
-</Layout>
-<script is:inline>
-(function(){var H=document.documentElement,q=document.getElementById('q'),sel=document.getElementById('cat'),cnt=document.getElementById('cnt'),rows=[].slice.call(document.querySelectorAll('.tt tbody tr'));
-function lang(){var b=H.lang==='bn';[].forEach.call(sel.querySelectorAll('option,optgroup'),function(o){var t=b?o.dataset.bn:o.dataset.en;if(o.tagName==='OPTION')o.text=t;else o.label=t});f()}
-function f(){var t=q.value.trim().toLowerCase(),c=sel.value,n=0,b=H.lang==='bn';
-rows.forEach(function(r){var ok=(!c||r.dataset.c===c)&&(!t||r.dataset.s.indexOf(t)>-1);r.hidden=!ok;if(ok)n++});
-var N=function(x){return x.toLocaleString(b?'bn-BD':'en-US',{useGrouping:false})};
-cnt.textContent=b?N(rows.length)+'টির মধ্যে '+N(n)+'টি টেস্ট দেখানো হচ্ছে':'Showing '+n+' of '+rows.length+' tests';
-document.getElementById('dn').hidden=n>0}
-q.addEventListener('input',f);sel.addEventListener('change',f);
-new MutationObserver(lang).observe(H,{attributes:true,attributeFilter:['lang']});lang()})();
-</script>
+<Base title={{ en: 'Tests & Prices', bn: 'টেস্ট ও মূল্য' }}>
+  <PageHero title={{ en: 'Tests & prices', bn: 'টেস্ট ও মূল্য' }} lead={{ en: 'Search the full list or choose a category. Every test shows its price, report time and preparation.', bn: 'পূর্ণ তালিকা খুঁজুন বা ক্যাটাগরি বেছে নিন। প্রতিটি টেস্টের মূল্য, রিপোর্টের সময় ও প্রস্তুতি দেওয়া আছে।' }} />
+  <section class="section section-flush">
+    <div class="wrap"><TestsExplorer /></div>
+  </section>
+  <section class="wrap">
+    <div class="cta">
+      <div><h2><T en="Not sure which test you need?" bn="কোন টেস্ট দরকার বুঝতে পারছেন না?" /></h2><p><T en="Your doctor’s prescription decides the tests. You can also book a doctor first." bn="কোন টেস্ট লাগবে তা ডাক্তারের প্রেসক্রিপশনই ঠিক করে। আপনি আগে ডাক্তারের সিরিয়ালও নিতে পারেন।" /></p></div>
+      <a class="btn btn-light btn-lg" href="/appointment"><Icon name="calendar" size={20} /> <T en="Book a doctor" bn="ডাক্তারের সিরিয়াল" /></a>
+    </div>
+  </section>
+</Base>

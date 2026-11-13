@@ -1,0 +1,13 @@
+---
+/**
+ * Bilingual text. Renders both languages; CSS shows the active one (html[lang]).
+ * Usage: <T en="Hello" bn="হ্যালো" />   or   <T t={{ en, bn }} as="p" class="lead" />
+ */
+interface Props { en?: string; bn?: string; t?: { en: string; bn: string }; as?: string; class?: string; html?: boolean }
+const { en, bn, t, as: Tag = 'span', class: cls = '', html = false } = Astro.props;
+const E = t?.en ?? en ?? '';
+const B = t?.bn ?? bn ?? '';
+---
+{html
+  ? <><Tag class={`l-en ${cls}`} set:html={E} /><Tag class={`l-bn ${cls}`} set:html={B} /></>
+  : <><Tag class={`l-en ${cls}`}>{E}</Tag><Tag class={`l-bn ${cls}`}>{B}</Tag></>}

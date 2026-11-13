@@ -1,0 +1,49 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import T from './T.astro';
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+const links = [
+  { href: '/about', en: 'About us', bn: 'আমাদের পরিচিতি' },
+  { href: '/doctors', en: 'Our doctors', bn: 'আমাদের ডাক্তার' },
+  { href: '/services', en: 'Services', bn: 'সেবাসমূহ' },
+  { href: '/tests', en: 'Tests & prices', bn: 'টেস্ট ও মূল্য' },
+  { href: '/reports', en: 'Reports', bn: 'রিপোর্ট' },
+  { href: '/appointment', en: 'Book appointment', bn: 'অ্যাপয়েন্টমেন্ট' },
+];
+---
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <Logo light />
+      <p><T en="Doctor consultation, pathology and imaging under one roof in Savar." bn="সাভারে এক ছাদের নিচে ডাক্তারের পরামর্শ, প্যাথলজি ও ইমেজিং সেবা।" /></p>
+    </div>
+    <div>
+      <h3><T en="Quick links" bn="দ্রুত লিংক" /></h3>
+      <ul class="foot-links">
+        {links.map((l) => <li><a href={l.href}><T en={l.en} bn={l.bn} /></a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h3><T en="Contact" bn="যোগাযোগ" /></h3>
+      <ul class="foot-contact">
+        <li><Icon name="pin" size={18} /><span><T t={site.address} /><br /><small><T t={site.landmark} /></small></span></li>
+        <li><Icon name="phone" size={18} /><span>{site.phones.map((p) => <a href={`tel:${p.tel}`}><T t={p.display} /></a>)}</span></li>
+        <li><Icon name="mail" size={18} /><a href={`mailto:${site.email}`}>{site.email}</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3><T en="Opening hours" bn="খোলার সময়" /></h3>
+      <ul class="foot-hours">
+        {site.hours.map((h) => <li><strong><T t={h.days} /></strong><span><T t={h.time} /></span></li>)}
+      </ul>
+      <p class="foot-em"><T t={site.emergency} /></p>
+    </div>
+  </div>
+  <div class="wrap foot-base">
+    <span>© {year} <T t={site.name} /></span>
+    <span class="l-en">Information on this site is for guidance and does not replace a doctor’s advice.</span>
+    <span class="l-bn">এই সাইটের তথ্য নির্দেশনামূলক; এটি ডাক্তারের পরামর্শের বিকল্প নয়।</span>
+  </div>
+</footer>

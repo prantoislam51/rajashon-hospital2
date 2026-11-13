@@ -1,6 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AppointmentForm from '../components/AppointmentForm.astro';
-import { u } from '../lib/i18n.js';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import AppointmentBooking from '../components/AppointmentBooking.astro';
 ---
-<Layout title={u.ap} sub={u.asub}><section><div class="wrap"><AppointmentForm /></div></section></Layout>
+<Base title={{ en: 'Appointment', bn: 'অ্যাপয়েন্টমেন্ট' }}>
+  <PageHero title={{ en: 'Book an appointment', bn: 'অ্যাপয়েন্টমেন্টের অনুরোধ' }} lead={{ en: 'Choose a doctor, pick one of the green days and send your details. We will confirm your serial on WhatsApp.', bn: 'ডাক্তার বেছে নিন, সবুজ দিনগুলোর একটি নির্বাচন করুন এবং তথ্য পাঠান। আমরা হোয়াটসঅ্যাপে সিরিয়াল নিশ্চিত করব।' }} />
+  <section class="section section-flush">
+    <div class="wrap"><AppointmentBooking /></div>
+  </section>
+</Base>

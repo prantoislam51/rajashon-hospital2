@@ -1,0 +1,29 @@
+---
+import { tests, categories } from '../data/tests';
+import { taka } from '../lib/i18n';
+import T from './T.astro';
+import Icon from './Icon.astro';
+
+const picks = [
+  'CBC (Complete Blood Count)', 'Urine R/E', 'Blood Sugar (Fasting)', 'HbA1c',
+  'Lipid Profile', 'Liver Function Test (LFT)', 'USG Whole Abdomen', 'ECG (12 lead)',
+].map((n) => tests.find((t) => t.name.en === n)!).filter(Boolean);
+const featured = categories.filter((c) => ['hematology', 'diabetes', 'xray', 'usg', 'thyroid', 'package'].includes(c.key));
+---
+<div class="tp">
+  <ul class="tp-list">
+    {picks.map((t) => (
+      <li>
+        <span class="tp-name"><T t={t.name} /><small><T t={t.report} /></small></span>
+        <span class="tp-price"><T t={taka(t.price)} /></span>
+      </li>
+    ))}
+  </ul>
+  <div class="tp-cats">
+    <p class="tp-cap"><T en="Browse by category" bn="ক্যাটাগরি অনুযায়ী দেখুন" /></p>
+    <div class="tp-chips">
+      {featured.map((c) => <a class="chip chip-link" href={`/tests?cat=${c.key}`}><T t={c.label} /></a>)}
+      <a class="chip chip-link chip-more" href="/tests"><T en="All categories" bn="সব ক্যাটাগরি" /> <Icon name="arrow" size={15} /></a>
+    </div>
+  </div>
+</div>

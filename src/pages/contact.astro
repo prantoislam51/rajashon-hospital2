@@ -1,14 +1,45 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import L from '../components/L.astro';
-import { site as s } from '../data/site.js';
-import { u, tel } from '../lib/i18n.js';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
+import { site } from '../data/site';
+const map = `https://www.google.com/maps?q=${encodeURIComponent(site.mapQuery)}&output=embed`;
+const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapQuery)}`;
 ---
-<Layout title={u.contact} sub={u.csub}>
-<section><div class="wrap"><div class="ci">
-  <div><b><L k="serial" /></b>{s.phones.map(p => <a href={tel(p)}>{p}<br/></a>)}</div>
-  <div><b><L k="mail" /></b><a href={`mailto:${s.email}`}>{s.email}</a></div>
-  <div><b><L k="addr" /></b><L o={s.address} /></div>
-  <div class="row"><a class="btn main" href="/appointment"><L k="book" /></a><a class="btn" target="_blank" rel="noopener" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.mapQuery)}`}><L k="map" /></a></div>
-</div></div></section>
-</Layout>
+<Base title={{ en: 'Contact', bn: 'যোগাযোগ' }}>
+  <PageHero title={{ en: 'Contact us', bn: 'যোগাযোগ' }} lead={{ en: 'Call for a serial, message us on WhatsApp or visit us on Birulia Road.', bn: 'সিরিয়ালের জন্য কল করুন, হোয়াটসঅ্যাপে মেসেজ দিন অথবা বিরুলিয়া রোডে চলে আসুন।' }} />
+  <section class="section section-flush">
+    <div class="wrap contact-grid">
+      <div class="contact-list">
+        <article class="ccard">
+          <span class="ccard-ic"><Icon name="phone" size={22} /></span>
+          <h3><T en="Serial numbers" bn="সিরিয়ালের নম্বর" /></h3>
+          <ul>{site.phones.map((p) => <li><a href={`tel:${p.tel}`}><T t={p.display} /></a></li>)}</ul>
+          <a class="btn btn-primary btn-sm" href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener"><Icon name="whatsapp" size={17} /> WhatsApp</a>
+        </article>
+        <article class="ccard">
+          <span class="ccard-ic"><Icon name="pin" size={22} /></span>
+          <h3><T en="Address" bn="ঠিকানা" /></h3>
+          <p><T t={site.address} /></p>
+          <p class="muted"><T t={site.landmark} /></p>
+        </article>
+        <article class="ccard">
+          <span class="ccard-ic"><Icon name="mail" size={22} /></span>
+          <h3><T en="Email" bn="ইমেইল" /></h3>
+          <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        </article>
+        <article class="ccard">
+          <span class="ccard-ic"><Icon name="clock" size={22} /></span>
+          <h3><T en="Opening hours" bn="খোলার সময়" /></h3>
+          <ul class="hours">{site.hours.map((h) => <li><strong><T t={h.days} /></strong><span><T t={h.time} /></span></li>)}</ul>
+          <p class="em"><Icon name="ambulance" size={17} /> <T t={site.emergency} /></p>
+        </article>
+      </div>
+      <div class="map">
+        <iframe title="Map" src={map} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <a class="btn btn-ghost btn-sm map-link" href={mapLink} target="_blank" rel="noopener"><Icon name="external" size={16} /> <T en="Open in Google Maps" bn="গুগল ম্যাপে খুলুন" /></a>
+      </div>
+    </div>
+  </section>
+</Base>

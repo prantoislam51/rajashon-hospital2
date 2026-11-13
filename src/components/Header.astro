@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import T from './T.astro';
+import { site } from '../data/site';
+
+interface Props { path: string }
+const { path } = Astro.props;
+const links = [
+  { href: '/', en: 'Home', bn: 'হোম' },
+  { href: '/about', en: 'About', bn: 'পরিচিতি' },
+  { href: '/doctors', en: 'Doctors', bn: 'ডাক্তার' },
+  { href: '/services', en: 'Services', bn: 'সেবা' },
+  { href: '/tests', en: 'Tests & Prices', bn: 'টেস্ট ও মূল্য' },
+  { href: '/reports', en: 'Reports', bn: 'রিপোর্ট' },
+  { href: '/contact', en: 'Contact', bn: 'যোগাযোগ' },
+];
+const icons: Record<string, string> = { '/': 'home', '/about': 'info', '/doctors': 'stethoscope', '/services': 'heart', '/tests': 'tag', '/reports': 'file', '/contact': 'phone' };
+const clean = (p: string) => (p.length > 1 ? p.replace(/\/$/, '') : p);
+const active = (href: string) => (href === '/' ? clean(path) === '/' : clean(path).startsWith(href));
+---
+{site.showDemoBanner && (
+  <div class="demo-bar">
+    <span class="l-en">Demo content — doctor names, schedules, prices and photos are samples. Replace them before going live.</span>
+    <span class="l-bn">ডেমো কনটেন্ট — ডাক্তারের নাম, সময়সূচি, মূল্য ও ছবি নমুনা মাত্র। চালু করার আগে প্রকৃত তথ্য দিন।</span>
+    <button type="button" data-banner-close data-aria-en="Dismiss" data-aria-bn="বন্ধ করুন" aria-label="Dismiss"><Icon name="close" size={16} /></button>
+  </div>
+)}
+<header class="site-header">
+  <div class="topbar">
+    <div class="wrap topbar-in">
+      <div class="topbar-l">
+        <a href={`tel:${site.phones[0].tel}`}><Icon name="phone" size={15} /> <T t={site.phones[0].display} /></a>
+        <span class="dot"></span>
+        <span><Icon name="pin" size={15} /> <T en="Birulia Road, Savar, Dhaka" bn="বিরুলিয়া রোড, সাভার, ঢাকা" /></span>
+        <span class="dot"></span>
+        <span><Icon name="clock" size={15} /> <T en="Open 7 days" bn="সপ্তাহে ৭ দিন খোলা" /></span>
+      </div>
+      <a class="topbar-r" href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener"><Icon name="whatsapp" size={15} /> <T en="Serial on WhatsApp" bn="হোয়াটসঅ্যাপে সিরিয়াল" /></a>
+    </div>
+  </div>
+  <div class="wrap bar">
+    <Logo />
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {links.map((l) => (
+          <li><a href={l.href} aria-current={active(l.href) ? 'page' : undefined}><T en={l.en} bn={l.bn} /></a></li>
+        ))}
+      </ul>
+      <a class="btn btn-primary nav-cta" href="/appointment"><Icon name="calendar" size={18} /> <T en="Book Appointment" bn="অ্যাপয়েন্টমেন্ট" /></a>
+    </nav>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" data-set-lang="en">EN</button>
+        <button type="button" data-set-lang="bn">বাংলা</button>
+      </div>
+      <button type="button" class="icon-btn" data-theme-toggle data-aria-en="Toggle day / night mode" data-aria-bn="ডে / নাইট মোড পরিবর্তন" aria-label="Toggle day / night mode">
+        <Icon name="moon" class="i-moon" /><Icon name="sun" class="i-sun" />
+      </button>
+      <button type="button" class="icon-btn nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="drawer" data-aria-en="Menu" data-aria-bn="মেনু" aria-label="Menu"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span></button>
+    </div>
+  </div>
+</header>
+<div class="nav-scrim" data-nav-scrim></div>
+<aside class="drawer" id="drawer" aria-label="Menu" data-drawer>
+  <div class="drawer-head">
+    <Logo />
+    <button type="button" class="icon-btn drawer-close" data-nav-close data-aria-en="Close menu" data-aria-bn="মেনু বন্ধ করুন" aria-label="Close menu"><Icon name="close" /></button>
+  </div>
+  <nav class="drawer-nav" aria-label="Mobile">
+    <ul>
+      {links.map((l, i) => (
+        <li style={`--i:${i}`}><a href={l.href} aria-current={active(l.href) ? 'page' : undefined}><span class="dn-ic"><Icon name={icons[l.href]} size={20} /></span><span class="dn-t"><T en={l.en} bn={l.bn} /></span><Icon name="chevr" size={18} class="dn-go" /></a></li>
+      ))}
+    </ul>
+  </nav>
+  <div class="drawer-foot" style={`--i:${links.length}`}>
+    <a class="btn btn-primary btn-lg" href="/appointment"><Icon name="calendar" size={20} /> <T en="Book Appointment" bn="অ্যাপয়েন্টমেন্ট নিন" /></a>
+    <div class="drawer-call">
+      <a href={`tel:${site.phones[0].tel}`}><Icon name="phone" size={18} /> <T t={site.phones[0].display} /></a>
+      <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+    </div>
+    <p class="drawer-addr"><Icon name="pin" size={16} /> <T t={site.address} /></p>
+  </div>
+</aside>

@@ -1,0 +1,50 @@
+---
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/dm-sans';
+import '@fontsource/hind-siliguri/bengali-400.css';
+import '@fontsource/hind-siliguri/bengali-500.css';
+import '@fontsource/hind-siliguri/bengali-600.css';
+import '@fontsource/hind-siliguri/bengali-700.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import type { Bi } from '../lib/i18n';
+
+interface Props { title: Bi; description?: Bi }
+const { title, description } = Astro.props;
+const full = (l: 'en' | 'bn') => `${title[l]} · ${site.short[l]}`;
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f6f1" />
+    <meta name="description" content={description?.en ?? site.name.en} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title data-en={full('en')} data-bn={full('bn')}>{full('en')}</title>
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        try {
+          var q = new URLSearchParams(location.search).get('lang');
+          var l = q === 'bn' || q === 'en' ? q : localStorage.getItem('rj-lang');
+          d.lang = l === 'bn' ? 'bn' : 'en';
+          d.dataset.theme = localStorage.getItem('rj-theme') === 'dark' ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main"><span class="l-en">Skip to content</span><span class="l-bn">মূল অংশে যান</span></a>
+    <Header path={Astro.url.pathname} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/app.ts';
+    </script>
+  </body>
+</html>

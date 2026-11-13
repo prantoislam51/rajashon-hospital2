@@ -1,0 +1,16 @@
+---
+import T from './T.astro';
+import type { Bi } from '../lib/i18n';
+interface Props { title: Bi; lead?: Bi; eyebrow?: Bi }
+const { title, lead, eyebrow } = Astro.props;
+---
+<section class="page-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/"><T en="Home" bn="হোম" /></a><span>/</span><span aria-current="page"><T t={title} /></span>
+    </nav>
+    {eyebrow && <p class="eyebrow"><T t={eyebrow} /></p>}
+    <h1><T t={title} /></h1>
+    {lead && <p class="lead"><T t={lead} /></p>}
+  </div>
+</section>
