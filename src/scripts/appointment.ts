@@ -1,7 +1,7 @@
 import { setDropdown } from './dropdown';
 
 type Bi = { en: string; bn: string };
-type Doc = { slug: string; name: Bi; spec: Bi; days: number[]; time: Bi; fee: number };
+type Doc = { slug: string; name: Bi; spec: Bi; specKey: string; days: number[]; time: Bi; fee: number };
 type L = 'en' | 'bn';
 
 const root = document.querySelector<HTMLElement>('[data-book]');
@@ -20,6 +20,7 @@ if (root) {
   };
 
   const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+  const catDd = root.querySelector<HTMLElement>('#cat-dd');
   const dd = $('#doc-dd');
   const cal = $('[data-cal]');
   const lock = $('[data-lock]');
@@ -129,6 +130,29 @@ if (root) {
 
   dd.addEventListener('dd-change', (e) => chooseDoctor((e as CustomEvent).detail.value));
 
+  function filterDoctorsByCategory(cat: string) {
+    const items = dd.querySelectorAll<HTMLElement>('.dd-panel li[data-cat]');
+    let count = 0;
+    items.forEach((li) => {
+      const match = !cat || cat === 'all' || li.dataset.cat === cat;
+      li.hidden = !match;
+      if (match) count++;
+    });
+    const emptyLi = dd.querySelector<HTMLElement>('.dd-empty');
+    if (emptyLi) emptyLi.hidden = count > 0;
+
+    if (doc && cat && cat !== 'all' && doc.specKey !== cat) {
+      setDropdown(dd, '', true);
+      chooseDoctor('');
+    }
+  }
+
+  if (catDd) {
+    catDd.addEventListener('dd-change', (e) => {
+      filterDoctorsByCategory((e as CustomEvent).detail.value);
+    });
+  }
+
   prev.addEventListener('click', () => { m--; if (m < 0) { m = 11; y--; } renderGrid(); renderSelects(); });
   next.addEventListener('click', () => { m++; if (m > 11) { m = 0; y++; } renderGrid(); renderSelects(); });
   monthSel.addEventListener('change', () => { m = +monthSel.value; renderGrid(); });
@@ -177,7 +201,25 @@ if (root) {
 
   document.addEventListener('langchange', () => { if (doc) renderAll(); else renderSummary(); });
 
+  // preselect category via ?cat=key or ?spec=key
+  const params = new URLSearchParams(location.search);
+  const preCat = params.get('cat') || params.get('spec');
+  if (preCat && catDd && catDd.querySelector(`.dd-opt[data-value="${CSS.escape(preCat)}"]`)) {
+    setDropdown(catDd, preCat, true);
+    filterDoctorsByCategory(preCat);
+  }
+
   // preselect via ?doctor=slug
-  const pre = new URLSearchParams(location.search).get('doctor');
-  if (pre && docs.some((d) => d.slug === pre)) { setDropdown(dd, pre, true); chooseDoctor(pre); }
+  const pre = params.get('doctor');
+  if (pre && docs.some((d) => d.slug === pre)) {
+    const matchedDoc = docs.find((d) => d.slug === pre);
+    if (matchedDoc && (!preCat || preCat === 'all')) {
+      if (catDd && catDd.querySelector(`.dd-opt[data-value="${CSS.escape(matchedDoc.specKey)}"]`)) {
+        setDropdown(catDd, matchedDoc.specKey, true);
+        filterDoctorsByCategory(matchedDoc.specKey);
+      }
+    }
+    setDropdown(dd, pre, true);
+    chooseDoctor(pre);
+  }
 }

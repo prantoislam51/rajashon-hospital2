@@ -1,5 +1,5 @@
 ---
-import { doctors } from '../data/doctors';
+import { doctors, specialties } from '../data/doctors';
 import { site } from '../data/site';
 import Dropdown from './Dropdown.astro';
 import DayChips from './DayChips.astro';
@@ -8,12 +8,23 @@ import Field from './Field.astro';
 import Icon from './Icon.astro';
 import T from './T.astro';
 
+const catOptions = [
+  { value: 'all', label: { en: 'All categories (optional)', bn: 'সব ক্যাটাগরি (ঐচ্ছিক)' }, count: doctors.length },
+  ...specialties
+    .filter((s) => doctors.some((d) => d.spec === s.key))
+    .map((s) => ({
+      value: s.key,
+      label: s.label,
+      count: doctors.filter((d) => d.spec === s.key).length,
+    })),
+];
+
 const options = [
   { value: '', label: { en: 'Select a doctor', bn: 'ডাক্তার নির্বাচন করুন' } },
-  ...doctors.map((d) => ({ value: d.slug, label: d.name, sub: d.specialty })),
+  ...doctors.map((d) => ({ value: d.slug, label: d.name, sub: d.specialty, category: d.spec })),
 ];
 const data = doctors.map((d) => ({
-  slug: d.slug, name: d.name, spec: d.specialty, days: d.days, time: d.time, fee: d.fee,
+  slug: d.slug, name: d.name, spec: d.specialty, specKey: d.spec, days: d.days, time: d.time, fee: d.fee,
 }));
 ---
 <div class="book" data-book data-wa={site.whatsapp} data-hosp-en={site.name.en} data-hosp-bn={site.name.bn}>
@@ -23,7 +34,10 @@ const data = doctors.map((d) => ({
     <!-- Step 1 -->
     <section class="bpanel">
       <header class="bpanel-h"><span class="step">1</span><h2><T en="Choose a doctor" bn="ডাক্তার নির্বাচন করুন" /></h2></header>
-      <Dropdown id="doc-dd" options={options} selected="" class="dd-wide" />
+      <div class="book-filters">
+        <Dropdown id="cat-dd" options={catOptions} selected="all" class="dd-wide" caption={{ en: 'Category (Optional)', bn: 'ক্যাটাগরি (ঐচ্ছিক)' }} />
+        <Dropdown id="doc-dd" options={options} selected="" class="dd-wide" caption={{ en: 'Doctor', bn: 'ডাক্তার' }} emptyText={{ en: 'No doctor in this category', bn: 'এই ক্যাটাগরিতে কোনো ডাক্তার নেই' }} />
+      </div>
       <div class="dsum-wrap">
         {doctors.map((d) => (
           <div class="dsum" data-sum={d.slug} hidden>

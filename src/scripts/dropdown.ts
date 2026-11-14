@@ -14,7 +14,7 @@ function toggle(dd: HTMLElement, force?: boolean) {
   dd.querySelector('.dd-btn')?.setAttribute('aria-expanded', String(open));
   const panel = dd.querySelector<HTMLElement>('.dd-panel')!;
   panel.hidden = !open;
-  if (open) panel.querySelector<HTMLElement>('[aria-selected="true"]')?.focus();
+  if (open) (panel.querySelector<HTMLElement>('li:not([hidden]) [aria-selected="true"]') ?? panel.querySelector<HTMLElement>('li:not([hidden]) .dd-opt'))?.focus();
 }
 
 export function setDropdown(dd: HTMLElement, value: string, silent = false) {
@@ -45,7 +45,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { toggle(open, false); open.querySelector<HTMLElement>('.dd-btn')?.focus(); return; }
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     e.preventDefault();
-    const opts = [...open.querySelectorAll<HTMLElement>('.dd-opt')];
+    const opts = [...open.querySelectorAll<HTMLElement>('.dd-opt')].filter((o) => !o.closest('[hidden]'));
     const i = opts.indexOf(document.activeElement as HTMLElement);
     const n = e.key === 'ArrowDown' ? Math.min(opts.length - 1, i + 1) : Math.max(0, i - 1);
     opts[n]?.focus();

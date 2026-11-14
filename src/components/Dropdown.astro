@@ -2,9 +2,9 @@
 import Icon from './Icon.astro';
 import T from './T.astro';
 import type { Bi } from '../lib/i18n';
-interface Opt { value: string; label: Bi; count?: number; sub?: Bi }
-interface Props { id: string; options: Opt[]; selected?: string; caption?: Bi; class?: string }
-const { id, options, selected = options[0]?.value, caption, class: cls = '' } = Astro.props;
+interface Opt { value: string; label: Bi; count?: number; sub?: Bi; category?: string }
+interface Props { id: string; options: Opt[]; selected?: string; caption?: Bi; class?: string; emptyText?: Bi }
+const { id, options, selected = options[0]?.value, caption, class: cls = '', emptyText } = Astro.props;
 const cur = options.find((o) => o.value === selected) ?? options[0];
 ---
 <div class={`dd ${cls}`} data-dd id={id} data-value={cur.value}>
@@ -15,14 +15,19 @@ const cur = options.find((o) => o.value === selected) ?? options[0];
   </button>
   <ul class="dd-panel" role="listbox" hidden>
     {options.map((o) => (
-      <li role="presentation">
-        <button type="button" role="option" class="dd-opt" data-value={o.value} aria-selected={o.value === cur.value ? 'true' : 'false'}>
+      <li role="presentation" data-cat={o.category}>
+        <button type="button" role="option" class="dd-opt" data-value={o.value} data-cat={o.category} aria-selected={o.value === cur.value ? 'true' : 'false'}>
           <span class="dd-text"><T t={o.label} />{o.sub && <small><T t={o.sub} /></small>}</span>
           {o.count !== undefined && <em class="dd-count">{o.count}</em>}
           <Icon name="check" size={16} class="dd-tick" />
         </button>
       </li>
     ))}
+    {emptyText && (
+      <li class="dd-empty" role="presentation" hidden>
+        <span class="dd-empty-text"><T t={emptyText} /></span>
+      </li>
+    )}
   </ul>
 </div>
 <script>

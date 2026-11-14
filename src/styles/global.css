@@ -400,6 +400,7 @@ html[lang='bn'] .dd-cap { text-transform: none; letter-spacing: 0; font-size: 0.
 .section-tint .dd-cap { background: var(--bg-2); }
 .dd-btn { width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px 0 20px; background: var(--surface); border: 1.5px solid var(--line-2); border-radius: 999px; font-weight: 600; text-align: left; transition: border-color 0.2s; }
 .dd-btn:hover, .dd.open .dd-btn { border-color: var(--brand); }
+.dd.open { z-index: 50; }
 .dd-cur { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dd-chev { transition: transform 0.2s; color: var(--ink-3); }
 .dd.open .dd-chev { transform: rotate(180deg); }
@@ -416,6 +417,8 @@ html[lang='bn'] .dd-cap { text-transform: none; letter-spacing: 0; font-size: 0.
 .dd-tick { opacity: 0; color: var(--brand); }
 .dd-opt[aria-selected='true'] { font-weight: 700; color: var(--brand); }
 .dd-opt[aria-selected='true'] .dd-tick { opacity: 1; }
+.dd-empty { padding: 12px 14px; text-align: center; color: var(--ink-3); font-size: 0.88rem; }
+.dd-empty[hidden] { display: none; }
 
 /* ---------- tests table ---------- */
 .tx-table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; box-shadow: var(--shadow-s); }
@@ -541,6 +544,8 @@ html[data-theme='dark'] .map iframe { filter: invert(0.92) hue-rotate(180deg) sa
 .bpanel { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); padding: 26px; box-shadow: var(--shadow-s); }
 .bpanel-h { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
 .bpanel-h h2 { margin: 0; font-size: 1.3rem; }
+.bpanel .dd-cap { background: var(--surface); }
+.book-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .step { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--brand); color: var(--brand-ink); font-weight: 700; font-family: var(--f-body); }
 .dsum { display: flex; gap: 16px; margin-top: 16px; padding: 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m); align-items: center; }
 .dsum[hidden] { display: none; }
@@ -718,6 +723,7 @@ html[lang='bn'] .sumcard dt { text-transform: none; letter-spacing: 0; font-size
   .about-photo img { border-radius: 56px var(--r-m) var(--r-m) var(--r-m); }
   .about-badge { left: 10px; bottom: 14px; padding: 10px 14px; }
   .book-aside { grid-template-columns: 1fr; }
+  .book-filters { grid-template-columns: 1fr; gap: 14px; }
   .bpanel { padding: 20px 16px; }
   .bform { grid-template-columns: 1fr 1fr; gap: 14px; }
   .cal-week, .cal-grid { gap: 4px; }
