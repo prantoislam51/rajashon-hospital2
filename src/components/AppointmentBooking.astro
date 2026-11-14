@@ -91,15 +91,51 @@ const data = doctors.map((d) => ({
         <Field label={{ en: 'Mobile number', bn: 'মোবাইল নম্বর' }} name="mobile" type="tel" required inputmode="tel" autocomplete="tel" placeholder={{ en: '01XXXXXXXXX', bn: '01XXXXXXXXX' }} />
         <Field label={{ en: 'Age', bn: 'বয়স' }} name="age" type="number" required inputmode="numeric" min={0} max={120} placeholder={{ en: 'Years', bn: 'বছর' }} class="field-age" />
         <p class="form-msg" data-msg role="alert" hidden></p>
-        <button class="btn btn-primary btn-lg" type="submit"><Icon name="whatsapp" size={20} /> <T en="Submit via WhatsApp" bn="হোয়াটসঅ্যাপে সাবমিট করুন" /></button>
-        <p class="form-hint"><T en="Your details open in WhatsApp as a ready message. We reply to confirm your serial." bn="আপনার তথ্য হোয়াটসঅ্যাপে তৈরি মেসেজ হিসেবে খুলবে। আমরা সিরিয়াল নিশ্চিত করে জানাব।" /></p>
+        
+<button class="btn btn-primary btn-lg" type="submit">
+  <Icon name="check" size={20} />
+  <span data-submit-label>
+    <T en="Submit Appointment" bn="অ্যাপয়েন্টমেন্ট জমা দিন" />
+  </span>
+</button>
+
+<p class="form-hint">
+  <T
+    en="Your appointment details will be securely submitted for confirmation."
+    bn="আপনার অ্যাপয়েন্টমেন্টের তথ্য জমা হবে এবং যাচাই করে নিশ্চিত করা হবে।"
+  />
+</p>
+
       </form>
-      <div class="book-done" data-done hidden>
-        <span class="done-ic"><Icon name="check" size={26} /></span>
-        <h3><T en="Request ready on WhatsApp" bn="অনুরোধ হোয়াটসঅ্যাপে প্রস্তুত" /></h3>
-        <p><T en="Press send in WhatsApp to finish. If it did not open, use the button below." bn="শেষ করতে হোয়াটসঅ্যাপে সেন্ড চাপুন। না খুললে নিচের বাটন ব্যবহার করুন।" /></p>
-        <a class="btn btn-primary" data-wa-link href="#" target="_blank" rel="noopener"><Icon name="whatsapp" size={18} /> <T en="Open WhatsApp" bn="হোয়াটসঅ্যাপ খুলুন" /></a>
-      </div>
+      
+<div class="book-done" data-done hidden>
+  <span class="done-ic">
+    <Icon name="check" size={26} />
+  </span>
+
+  <h3 data-done-title>
+    <T
+      en="Appointment submitted successfully!"
+      bn="অ্যাপয়েন্টমেন্ট সফলভাবে জমা হয়েছে!"
+    />
+  </h3>
+
+  <p data-done-detail>
+    <T
+      en="Your appointment request has been saved."
+      bn="আপনার অ্যাপয়েন্টমেন্টের তথ্য সংরক্ষণ করা হয়েছে।"
+    />
+  </p>
+
+  <div class="appointment-id">
+    <span data-id-label>
+      <T en="Appointment ID" bn="অ্যাপয়েন্টমেন্ট আইডি" />
+    </span>
+
+    <strong data-appointment-id>—</strong>
+  </div>
+</div>
+
     </section>
   </div>
 
