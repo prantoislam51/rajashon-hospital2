@@ -137,11 +137,20 @@ export const POST: APIRoute = async ({ request }) => {
         try {
             result = JSON.parse(responseText);
         } catch {
-            console.error('Google Apps Script returned:', responseText);
+            console.error('Google Apps Script raw response:', responseText);
+
+            const isGoogleLogin = responseText.includes('ServiceLogin') || responseText.includes('accounts.google.com');
+            const isHtml = responseText.trim().startsWith('<') || responseText.includes('<html');
+
+            const message = isGoogleLogin
+                ? 'Google Apps Script permissions error: Web App access must be set to "Anyone" (Deploy > Manage deployments > Who has access: Anyone).'
+                : isHtml
+                ? 'Google Apps Script returned an HTML page instead of JSON. Ensure the Web App URL ends in /exec and the script uses ContentService.MimeType.JSON.'
+                : 'Google Apps Script returned an invalid response.';
 
             return json({
                 success: false,
-                message: 'Google Apps Script returned an invalid response.',
+                message,
             }, 502);
         }
 
