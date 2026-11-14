@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Appointment Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#0b5d4b;--brand-d:#073f33;--bg:#edf2f0;--card:#fff;--ink:#12302a;--mute:#5d736d;--line:#d5dfdc}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Hind Siliguri",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #f0b429;outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 14px}
+
+/* হেডার (ছোট ও স্টিকি) */
+header{background:var(--brand);color:#fff;position:sticky;top:0;z-index:20}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;height:50px}
+h1{margin:0;font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sync{font-size:12px;opacity:.8;margin-left:8px;font-weight:400}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;min-height:38px}
+.btn:hover{background:#f1f6f4}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-d)}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.5);color:#fff;padding:5px 12px;min-height:32px}
+.btn.ok{background:#1e8e3e;border-color:#1e8e3e;color:#fff}
+.btn.no{background:#fff;border-color:#dc3545;color:#b02a37}
+.btn.no.arm{background:#dc3545;color:#fff}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn.sm{padding:5px 10px;font-size:13px;min-height:32px}
+
+main{padding:14px 0 40px}
+.stats{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.stats::-webkit-scrollbar{display:none}
+.stat{flex:0 0 auto;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 14px;white-space:nowrap;font-size:14px}
+.stat b{font-size:16px;margin-right:4px}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
+.filters{display:grid;grid-template-columns:2fr 1.3fr 1fr 1fr;gap:8px}
+.filters input,.filters select,.fld input,.fld select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;min-height:40px}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 12px;cursor:pointer;font-size:14px;white-space:nowrap}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip small{opacity:.75;margin-left:4px}
+
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.count{color:var(--mute);font-size:14px}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+
+.group-title{margin:16px 0 8px;font-size:17px;font-weight:700;display:flex;gap:8px;align-items:baseline}
+.group-title span{font-size:13px;font-weight:500;color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+
+.card{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--st);border-radius:12px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-align:left;width:100%}
+.card:hover{border-color:var(--st);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.card.Pending{--st:#e0a800}.card.Confirmed{--st:#17a2b8}.card.Completed{--st:#28a745}.card.Cancelled{--st:#dc3545}
+.r1{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.pname{font-size:17px;font-weight:700;line-height:1.25}
+.pmeta{color:var(--mute);font-size:13px}
+.time{background:#12302a;color:#fff;border-radius:8px;padding:2px 10px;font-weight:700;font-size:16px;white-space:nowrap}
+.mob{font-size:18px;font-weight:600;color:var(--brand);letter-spacing:.3px}
+.doc{font-size:14px;background:#f3f8f6;border-radius:8px;padding:6px 10px}
+.doc b{display:block}
+.doc span{color:var(--mute);font-size:13px}
+.r3{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px}
+.badge{border-radius:999px;padding:2px 10px;font-weight:700;font-size:12px}
+.badge.Pending{background:#fff3cd;color:#7a5b00}.badge.Confirmed{background:#d1ecf1;color:#0c5460}
+.badge.Completed{background:#d4edda;color:#155724}.badge.Cancelled{background:#f8d7da;color:#721c24}
+
+.empty,.loading{text-align:center;padding:40px 10px;color:var(--mute)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:#12302a;color:#fff;padding:10px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:92vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* মডাল */
+.ov{position:fixed;inset:0;background:rgba(10,30,25,.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:14px}
+.ov[hidden]{display:none}
+.modal{background:#fff;width:100%;max-width:640px;max-height:94vh;border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+.m-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.m-head h2{margin:0;font-size:18px}
+.m-head small{color:var(--mute);display:block}
+.x{border:0;background:#eef3f1;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer;line-height:1;flex:0 0 auto}
+.m-body{padding:14px 16px;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fld label{display:block;font-size:13px;color:var(--mute);margin-bottom:3px}
+.fld.full{grid-column:1/-1}
+.info{grid-column:1/-1;font-size:13px;color:var(--mute);background:#f3f8f6;border-radius:8px;padding:8px 10px}
+.m-foot{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--line);background:#fafcfb}
+.m-foot .btn{flex:1 1 90px}
+
+@media (max-width:860px){.filters{grid-template-columns:1fr 1fr}.filters input[type=search]{grid-column:1/-1}}
+@media (max-width:560px){
+  .wrap{padding:0 10px}
+  h1{font-size:16px}.sync{display:none}
+  .grid{grid-template-columns:1fr}
+  .acts{width:100%}.acts .btn{flex:1 1 auto}
+  .ov{padding:0;align-items:flex-end}
+  .modal{max-width:none;max-height:96vh;border-radius:16px 16px 0 0}
+  .m-body{grid-template-columns:1fr}
+  .m-foot{position:sticky;bottom:0}
+  .m-foot .btn{flex:1 1 45%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <h1>🏥 অ্যাপয়েন্টমেন্ট<span class="sync" id="lastSync"></span></h1>
+    <button class="btn ghost" id="btnRefresh">রিফ্রেশ</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stats" id="stats"></section>
+
+  <section class="panel">
+    <div class="filters">
+      <input id="q" type="search" placeholder="নাম, মোবাইল বা ID খুঁজুন…" aria-label="সার্চ">
+      <select id="fDoctor" aria-label="ডাক্তার"><option value="">সব ডাক্তার</option></select>
+      <input id="fDate" type="date" aria-label="তারিখ">
+      <select id="fStatus" aria-label="স্ট্যাটাস">
+        <option value="">সব স্ট্যাটাস</option>
+        <option value="Pending">অপেক্ষমাণ</option><option value="Confirmed">অ্যাপ্রুভ</option>
+        <option value="Completed">সম্পন্ন</option><option value="Cancelled">রিজেক্ট</option>
+      </select>
+    </div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <div class="bar">
+    <div class="count" id="count"></div>
+    <div class="acts">
+      <button class="btn sm" id="btnToday">আজ</button>
+      <button class="btn sm" id="btnClear">ফিল্টার মুছুন</button>
+      <button class="btn sm primary" id="btnCopySheet">📋 সব কপি (Sheet)</button>
+      <button class="btn sm" id="btnCopyText">📝 সব কপি (টেক্সট)</button>
+    </div>
+  </div>
+
+  <div id="list"><div class="loading">লোড হচ্ছে…</div></div>
+</main>
+
+<!-- বিস্তারিত / এডিট বক্স -->
+<div class="ov" id="ov" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="m-head">
+      <div><h2 id="mTitle">অ্যাপয়েন্টমেন্ট বিস্তারিত</h2><small id="mSub"></small></div>
+      <button class="x" id="mClose" aria-label="বন্ধ করুন">×</button>
+    </div>
+    <div class="m-body">
+      <div class="fld"><label for="eName">রোগীর নাম</label><input id="eName" type="text" maxlength="200"></div>
+      <div class="fld"><label for="eAge">বয়স</label><input id="eAge" type="number" min="0" max="120" inputmode="numeric"></div>
+      <div class="fld full"><label for="eMobile">মোবাইল নম্বর</label><input id="eMobile" type="tel" inputmode="tel"></div>
+      <div class="fld full"><label for="eDoctor">ডাক্তার</label><select id="eDoctor"></select></div>
+      <div class="fld"><label for="eDate">অ্যাপয়েন্টমেন্টের তারিখ</label><input id="eDate" type="date"></div>
+      <div class="fld"><label for="eTime">সময়</label><input id="eTime" type="time"></div>
+      <div class="fld"><label for="eFee">ফি (৳)</label><input id="eFee" type="number" min="0" inputmode="numeric"></div>
+      <div class="fld"><label for="eStatus">স্ট্যাটাস</label>
+        <select id="eStatus"><option value="Pending">অপেক্ষমাণ</option><option value="Confirmed">অ্যাপ্রুভ</option><option value="Completed">সম্পন্ন</option><option value="Cancelled">রিজেক্ট</option></select></div>
+      <div class="info" id="mInfo"></div>
+    </div>
+    <div class="m-foot">
+      <button class="btn no" id="bReject">❌ রিজেক্ট</button>
+      <button class="btn ok" id="bApprove">✅ অ্যাপ্রুভ</button>
+      <button class="btn primary" id="bSave">💾 সংরক্ষণ</button>
+      <button class="btn" id="bCopy">কপি</button>
+    </div>
+  </div>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+var ALL=[],view=[],cur=null,armed=false;
+var BN={Pending:"অপেক্ষমাণ",Confirmed:"অ্যাপ্রুভ",Completed:"সম্পন্ন",Cancelled:"রিজেক্ট"};
+var $=function(id){return document.getElementById(id)};
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function mins(t){var m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return 0;var h=+m[1]%12;if(m[3].toUpperCase()==="PM")h+=12;return h*60+ +m[2]}
+function to24(t){var m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return "";var h=+m[1]%12;if(m[3].toUpperCase()==="PM")h+=12;return ("0"+h).slice(-2)+":"+m[2]}
+function to12(v){var m=/^(\d{2}):(\d{2})/.exec(v||"");if(!m)return "";var h=+m[1],ap=h>=12?"PM":"AM";h=h%12||12;return ("0"+h).slice(-2)+":"+m[2]+" "+ap}
+function niceDate(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s);if(!m)return s;return new Date(+m[1],+m[2]-1,+m[3]).toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"})}
+function toast(msg){var t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(function(){t.classList.remove("show")},2200)}
+
+/* কপি */
+function copyText(text,msg){
+  function fb(){var ta=document.createElement("textarea");ta.value=text;ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.select();var ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);toast(ok?msg:"কপি হয়নি — অনুমতি দিন")}
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(text).then(function(){toast(msg)},fb);else fb();
+}
+function cardText(a){return ["রোগী: "+a.patient,"মোবাইল: "+a.mobile,"বয়স: "+a.age,"ডাক্তার: "+a.doctor+" ("+a.specialty+")","তারিখ: "+a.date+", সময়: "+a.time,"ফি: ৳"+a.fee,"স্ট্যাটাস: "+BN[a.status],"ID: "+a.id].join("\n")}
+function tsv(rows){
+  var head=["Appointment ID","Submission Date","Patient Name","Mobile Number","Age","Doctor Name","Doctor Specialty","Appointment Date","Appointment Time","Appointment Fee","Status"];
+  return [head.join("\t")].concat(rows.map(function(a){
+    return [a.id,a.submitted,a.patient,"'"+a.mobile,a.age,a.doctor,a.specialty,a.date,a.time,a.fee,a.status].map(function(v){return String(v).replace(/[\t\r\n]+/g," ")}).join("\t")})).join("\n");
+}
+
+/* ডেটা লোড */
+function load(silent){
+  if(!silent)$("list").innerHTML='<div class="loading">লোড হচ্ছে…</div>';
+  google.script.run.withSuccessHandler(function(rows){
+    ALL=rows||[];$("lastSync").textContent=" · "+new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});
+    buildDoctors();if(!$("ov").hidden&&silent)return;render();
+  }).withFailureHandler(function(e){
+    $("list").innerHTML='<div class="empty">ডেটা লোড করা যায়নি: '+esc(e.message||e)+'</div>';
+  }).getAppointments();
+}
+function doctorMap(){var m={};ALL.forEach(function(a){if(!m[a.doctor])m[a.doctor]={name:a.doctor,slug:a.doctorSlug,specialty:a.specialty,key:a.specialtyKey}});return m}
+function buildDoctors(){
+  var sel=$("fDoctor"),c=sel.value,m=doctorMap();
+  sel.innerHTML='<option value="">সব ডাক্তার</option>'+Object.keys(m).sort().map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+' — '+esc(m[n].specialty)+'</option>'}).join("");
+  sel.value=c;
+}
+
+/* তালিকা */
+function filtered(){
+  var q=$("q").value.trim().toLowerCase(),d=$("fDoctor").value,dt=$("fDate").value,st=$("fStatus").value;
+  return ALL.filter(function(a){
+    if(d&&a.doctor!==d)return false;if(dt&&a.date!==dt)return false;if(st&&a.status!==st)return false;
+    if(q&&(a.patient+" "+a.mobile+" "+a.id).toLowerCase().indexOf(q)<0)return false;return true;
+  }).sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:mins(a.time)-mins(b.time)});
+}
+function renderStats(){
+  var t=today(),c={Pending:0,Confirmed:0,Completed:0,Cancelled:0},td=0;
+  ALL.forEach(function(a){c[a.status]=(c[a.status]||0)+1;if(a.date===t)td++});
+  $("stats").innerHTML=[["মোট",ALL.length],["আজ",td],["অপেক্ষমাণ",c.Pending],["অ্যাপ্রুভ",c.Confirmed],["সম্পন্ন",c.Completed],["রিজেক্ট",c.Cancelled]]
+    .map(function(i){return '<div class="stat"><b>'+i[1]+'</b>'+i[0]+'</div>'}).join("");
+}
+function renderChips(){
+  var n={};ALL.forEach(function(a){n[a.doctor]=(n[a.doctor]||0)+1});var c=$("fDoctor").value;
+  $("chips").innerHTML='<button class="chip'+(c?'':' on')+'" data-d="">সবাই<small>'+ALL.length+'</small></button>'+
+    Object.keys(n).sort().map(function(k){return '<button class="chip'+(c===k?' on':'')+'" data-d="'+esc(k)+'">'+esc(k)+'<small>'+n[k]+'</small></button>'}).join("");
+}
+function cardHTML(a){
+  return '<div class="card '+esc(a.status)+'" role="button" tabindex="0" data-id="'+esc(a.id)+'">'+
+   '<div class="r1"><div><div class="pname">'+esc(a.patient)+'</div><div class="pmeta">বয়স '+esc(a.age)+' · '+esc(a.id)+'</div></div><div class="time">'+esc(a.time)+'</div></div>'+
+   '<div class="mob">'+esc(a.mobile)+'</div>'+
+   '<div class="doc"><b>'+esc(a.doctor)+'</b><span>'+esc(a.specialty)+'</span></div>'+
+   '<div class="r3"><span>৳'+a.fee.toLocaleString("en-US")+'</span><span class="badge '+esc(a.status)+'">'+BN[a.status]+'</span></div></div>';
+}
+function render(){
+  renderStats();renderChips();view=filtered();
+  $("count").textContent=view.length+" টি দেখানো হচ্ছে (মোট "+ALL.length+")";
+  if(!view.length){$("list").innerHTML='<div class="empty">কোনো অ্যাপয়েন্টমেন্ট পাওয়া যায়নি।</div>';return}
+  var by={},ord=[];view.forEach(function(a){if(!by[a.date]){by[a.date]=[];ord.push(a.date)}by[a.date].push(a)});
+  $("list").innerHTML=ord.map(function(d){return '<h2 class="group-title">'+esc(niceDate(d))+(d===today()?' <span>আজ</span>':'')+'<span>'+by[d].length+' জন</span></h2><div class="grid">'+by[d].map(cardHTML).join("")+'</div>'}).join("");
+}
+
+/* মডাল */
+function find(id){return ALL.filter(function(a){return a.id===id})[0]}
+function openModal(id){
+  var a=find(id);if(!a)return;cur=a;disarm();
+  var m=doctorMap();
+  $("eDoctor").innerHTML=Object.keys(m).sort().map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+' — '+esc(m[n].specialty)+'</option>'}).join("");
+  $("eName").value=a.patient;$("eAge").value=a.age;$("eMobile").value=a.mobile;$("eDoctor").value=a.doctor;
+  $("eDate").value=/^\d{4}-\d{2}-\d{2}$/.test(a.date)?a.date:"";$("eTime").value=to24(a.time);
+  $("eFee").value=a.fee;$("eStatus").value=a.status;
+  $("mSub").textContent=a.id;
+  $("mInfo").innerHTML='বর্তমান: '+esc(niceDate(a.date))+', '+esc(a.time)+'<br>আবেদনের সময়: '+esc(a.submitted)+(a.hospital?'<br>হাসপাতাল: '+esc(a.hospital):'');
+  $("ov").hidden=false;document.body.style.overflow="hidden";
+}
+function closeModal(){$("ov").hidden=true;document.body.style.overflow="";cur=null;disarm()}
+function disarm(){armed=false;$("bReject").classList.remove("arm");$("bReject").textContent="❌ রিজেক্ট"}
+function busy(b){["bReject","bApprove","bSave","bCopy"].forEach(function(i){$(i).disabled=b})}
+
+function save(status,doneMsg){
+  if(!cur)return;
+  var m=doctorMap()[$("eDoctor").value]||{name:cur.doctor,slug:cur.doctorSlug,specialty:cur.specialty,key:cur.specialtyKey};
+  var f={patientName:$("eName").value.trim(),mobile:$("eMobile").value.trim(),age:$("eAge").value,
+    doctorName:m.name,doctorSlug:m.slug,doctorSpecialty:m.specialty,specialtyKey:m.key,
+    appointmentDate:$("eDate").value||cur.date,appointmentTime:to12($("eTime").value)||cur.time,
+    appointmentFee:$("eFee").value===""?0:$("eFee").value,status:status};
+  if(!f.patientName)return toast("রোগীর নাম লিখুন");
+  if(!/^(?:\+?88)?01[3-9]\d{8}$/.test(f.mobile.replace(/[\s-]/g,"")))return toast("সঠিক মোবাইল নম্বর দিন");
+  var ag=Number(f.age);if(f.age===""||!(ag>=0&&ag<=120)||ag%1)return toast("সঠিক বয়স দিন");
+  var a=cur;busy(true);
+  google.script.run.withSuccessHandler(function(r){
+    a.patient=f.patientName;a.mobile=r.mobile;a.age=String(ag);a.doctor=m.name;a.doctorSlug=m.slug;a.specialty=m.specialty;a.specialtyKey=m.key;
+    a.date=f.appointmentDate;a.time=f.appointmentTime;a.fee=Number(f.appointmentFee);a.status=status;
+    busy(false);closeModal();render();toast(doneMsg);
+  }).withFailureHandler(function(e){busy(false);toast("সংরক্ষণ হয়নি: "+(e.message||e))}).updateAppointment(a.id,f);
+}
+
+/* ইভেন্ট */
+["q","fDate"].forEach(function(i){$(i).addEventListener("input",render)});
+["fDoctor","fStatus"].forEach(function(i){$(i).addEventListener("change",render)});
+$("chips").addEventListener("click",function(e){var b=e.target.closest(".chip");if(!b)return;$("fDoctor").value=b.getAttribute("data-d");render()});
+$("btnRefresh").onclick=function(){load(false)};
+$("btnToday").onclick=function(){$("fDate").value=today();render()};
+$("btnClear").onclick=function(){$("q").value="";$("fDoctor").value="";$("fDate").value="";$("fStatus").value="";render()};
+$("btnCopySheet").onclick=function(){if(!view.length)return toast("কপি করার মতো ডেটা নেই");copyText(tsv(view),view.length+" জনের তথ্য কপি হয়েছে — Sheet-এ Paste করুন")};
+$("btnCopyText").onclick=function(){if(!view.length)return toast("কপি করার মতো ডেটা নেই");copyText(view.map(cardText).join("\n\n"),view.length+" জনের তথ্য কপি হয়েছে")};
+$("list").addEventListener("click",function(e){var c=e.target.closest(".card");if(c)openModal(c.getAttribute("data-id"))});
+$("list").addEventListener("keydown",function(e){if(e.key!=="Enter"&&e.key!==" ")return;var c=e.target.closest(".card");if(c){e.preventDefault();openModal(c.getAttribute("data-id"))}});
+$("mClose").onclick=closeModal;
+$("ov").addEventListener("mousedown",function(e){if(e.target===$("ov"))closeModal()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("ov").hidden)closeModal()});
+$("bApprove").onclick=function(){save("Confirmed","অ্যাপ্রুভ করা হয়েছে ✅")};
+$("bReject").onclick=function(){if(!armed){armed=true;this.classList.add("arm");this.textContent="নিশ্চিত? আবার চাপুন";return}save("Cancelled","রিজেক্ট করা হয়েছে")};
+$("bSave").onclick=function(){save($("eStatus").value,"তথ্য আপডেট হয়েছে ✅")};
+$("bCopy").onclick=function(){if(cur)copyText(cardText(cur),"রোগীর তথ্য কপি হয়েছে")};
+
+load(false);
+setInterval(function(){if(!document.hidden&&$("ov").hidden)load(true)},60000);
+</script>
+</body>
+</html>

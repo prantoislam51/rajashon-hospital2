@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Appointment Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#0b5d4b; --brand-d:#073f33; --bg:#edf2f0; --card:#fff; --ink:#12302a; --mute:#5d736d; --line:#d5dfdc;
+  --pend-bg:#fff3cd; --pend:#7a5b00; --conf-bg:#d1ecf1; --conf:#0c5460;
+  --done-bg:#d4edda; --done:#155724; --canc-bg:#f8d7da; --canc:#721c24;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Hind Siliguri",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #f0b429;outline-offset:2px}
+
+header{background:var(--brand);color:#fff;padding:18px 20px 74px}
+.wrap{max-width:1240px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:26px;font-weight:700;letter-spacing:.2px}
+.sub{margin:2px 0 0;opacity:.8;font-size:14px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;transition:background .15s}
+.btn:hover{background:#f1f6f4}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-d)}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.45);color:#fff}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.btn.sm{padding:5px 10px;font-size:13px}
+
+main{margin-top:-52px;padding:0 20px 40px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border-radius:10px;padding:12px 16px;border:1px solid var(--line)}
+.stat b{display:block;font-size:26px;line-height:1.1}
+.stat span{color:var(--mute);font-size:13px}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:16px}
+.filters{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr;gap:10px}
+.filters input,.filters select{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 13px;cursor:pointer;font-size:14px}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip small{opacity:.75;margin-left:4px}
+
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.bar .count{color:var(--mute)}
+.bar .acts{display:flex;gap:8px;flex-wrap:wrap}
+
+.group-title{margin:22px 0 10px;font-size:18px;font-weight:700;display:flex;gap:10px;align-items:baseline}
+.group-title span{font-size:13px;font-weight:500;color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;border-top:5px solid var(--st);overflow:hidden;display:flex;flex-direction:column}
+.card.Pending{--st:#e0a800}.card.Confirmed{--st:#17a2b8}.card.Completed{--st:#28a745}.card.Cancelled{--st:#dc3545}
+.c-head{padding:12px 14px 6px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.pname{font-size:18px;font-weight:700;line-height:1.25}
+.pmeta{color:var(--mute);font-size:14px}
+.id{font-size:12px;color:var(--mute);white-space:nowrap}
+.mobile{margin:2px 14px 0;display:flex;align-items:center;gap:8px}
+.mobile a{font-size:20px;font-weight:600;color:var(--brand);text-decoration:none;letter-spacing:.5px}
+.doc{margin:10px 14px 0;padding:9px 11px;background:#f3f8f6;border-radius:8px}
+.doc b{display:block}
+.doc span{color:var(--mute);font-size:14px}
+.when{display:flex;justify-content:space-between;gap:8px;margin:10px 14px 0;font-size:14px}
+.when div{flex:1}
+.when small{display:block;color:var(--mute);font-size:12px}
+.when strong{font-size:15px}
+.c-foot{margin-top:auto;padding:12px 14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.status{border-radius:999px;padding:4px 8px;border:0;font-weight:700;font-size:13px;cursor:pointer}
+.status.Pending{background:var(--pend-bg);color:var(--pend)}
+.status.Confirmed{background:var(--conf-bg);color:var(--conf)}
+.status.Completed{background:var(--done-bg);color:var(--done)}
+.status.Cancelled{background:var(--canc-bg);color:var(--canc)}
+.c-foot .spacer{flex:1}
+.sub-time{padding:0 14px 10px;font-size:12px;color:var(--mute)}
+
+.empty,.loading{text-align:center;padding:50px 10px;color:var(--mute)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#12302a;color:#fff;padding:10px 18px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s;z-index:9}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:860px){.filters{grid-template-columns:1fr 1fr}.filters input:first-child{grid-column:1/-1}}
+@media (max-width:480px){h1{font-size:22px}.grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <div>
+      <h1>🏥 অ্যাপয়েন্টমেন্ট ড্যাশবোর্ড</h1>
+      <p class="sub" id="lastSync">লোড হচ্ছে…</p>
+    </div>
+    <div class="top-actions">
+      <button class="btn ghost" id="btnRefresh">রিফ্রেশ</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stats" id="stats"></section>
+
+  <section class="panel">
+    <div class="filters">
+      <input id="q" type="search" placeholder="রোগীর নাম, মোবাইল বা ID দিয়ে খুঁজুন…" aria-label="সার্চ">
+      <select id="fDoctor" aria-label="ডাক্তার"><option value="">সব ডাক্তার</option></select>
+      <input id="fDate" type="date" aria-label="তারিখ">
+      <select id="fStatus" aria-label="স্ট্যাটাস">
+        <option value="">সব স্ট্যাটাস</option>
+        <option>Pending</option><option>Confirmed</option><option>Completed</option><option>Cancelled</option>
+      </select>
+    </div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <div class="bar">
+    <div class="count" id="count"></div>
+    <div class="acts">
+      <button class="btn sm" id="btnToday">আজকের তালিকা</button>
+      <button class="btn sm" id="btnClear">ফিল্টার মুছুন</button>
+      <button class="btn sm primary" id="btnCopySheet" title="Google Sheet-এ সরাসরি Paste করা যাবে">📋 সব কপি (Sheet-এর জন্য)</button>
+      <button class="btn sm" id="btnCopyText">📝 সব কপি (টেক্সট)</button>
+    </div>
+  </div>
+
+  <div id="list"><div class="loading">অ্যাপয়েন্টমেন্ট লোড হচ্ছে…</div></div>
+</main>
+<div id="toast" role="status"></div>
+
+<script>
+var ALL = [], view = [];
+var STATUSES = ["Pending","Confirmed","Completed","Cancelled"];
+var BN = {Pending:"অপেক্ষমাণ",Confirmed:"নিশ্চিত",Completed:"সম্পন্ন",Cancelled:"বাতিল"};
+var $ = function(id){return document.getElementById(id)};
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function mins(t){var m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t||"");if(!m)return 0;var h=+m[1]%12;if(m[3].toUpperCase()==="PM")h+=12;return h*60+ +m[2]}
+function niceDate(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s);if(!m)return s;var d=new Date(+m[1],+m[2]-1,+m[3]);return d.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"})}
+function toast(msg){var t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(function(){t.classList.remove("show")},1800)}
+
+/* ---------- Copy ---------- */
+function copyText(text,msg){
+  function fallback(){
+    var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();
+    var ok=false;try{ok=document.execCommand("copy")}catch(e){}
+    document.body.removeChild(ta);toast(ok?msg:"কপি হয়নি — ব্রাউজারে Clipboard অনুমতি দিন");
+  }
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(text).then(function(){toast(msg)},fallback);
+  }else fallback();
+}
+function cardText(a){
+  return ["রোগী: "+a.patient,"মোবাইল: "+a.mobile,"বয়স: "+a.age,"ডাক্তার: "+a.doctor+" ("+a.specialty+")",
+          "তারিখ: "+a.date+", সময়: "+a.time,"ফি: ৳"+a.fee,"ID: "+a.id].join("\n");
+}
+function tsv(rows,withHead){
+  var head=["Appointment ID","Submission Date","Patient Name","Mobile Number","Age","Doctor Name","Doctor Specialty","Appointment Date","Appointment Time","Appointment Fee","Status"];
+  var lines=rows.map(function(a){
+    return [a.id,a.submitted,a.patient,"'"+a.mobile,a.age,a.doctor,a.specialty,a.date,a.time,a.fee,a.status]
+      .map(function(v){return String(v).replace(/[\t\r\n]+/g," ")}).join("\t");
+  });
+  return (withHead?[head.join("\t")]:[]).concat(lines).join("\n");
+}
+
+/* ---------- Data ---------- */
+function load(silent){
+  if(!silent)$("list").innerHTML='<div class="loading">অ্যাপয়েন্টমেন্ট লোড হচ্ছে…</div>';
+  google.script.run
+    .withSuccessHandler(function(rows){
+      ALL=rows||[];
+      $("lastSync").textContent="সর্বশেষ আপডেট: "+new Date().toLocaleTimeString("en-US");
+      buildDoctors();render();
+    })
+    .withFailureHandler(function(e){
+      $("list").innerHTML='<div class="empty">ডেটা লোড করা যায়নি: '+esc(e.message||e)+'<br>Deploy-এর অ্যাক্সেস ও Sheet-এর ট্যাবের নাম "Appointments" কিনা দেখুন।</div>';
+    })
+    .getAppointments();
+}
+function buildDoctors(){
+  var sel=$("fDoctor"),cur=sel.value,names={};
+  ALL.forEach(function(a){names[a.doctor]=a.specialty});
+  sel.innerHTML='<option value="">সব ডাক্তার</option>'+Object.keys(names).sort().map(function(n){
+    return '<option value="'+esc(n)+'">'+esc(n)+' — '+esc(names[n])+'</option>'}).join("");
+  sel.value=cur;
+}
+
+/* ---------- Render ---------- */
+function filtered(){
+  var q=$("q").value.trim().toLowerCase(),d=$("fDoctor").value,dt=$("fDate").value,st=$("fStatus").value;
+  return ALL.filter(function(a){
+    if(d&&a.doctor!==d)return false;
+    if(dt&&a.date!==dt)return false;
+    if(st&&a.status!==st)return false;
+    if(q&&(a.patient+" "+a.mobile+" "+a.id).toLowerCase().indexOf(q)<0)return false;
+    return true;
+  }).sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:mins(a.time)-mins(b.time)});
+}
+function renderStats(){
+  var t=today(),c={Pending:0,Confirmed:0,Completed:0,Cancelled:0},td=0;
+  ALL.forEach(function(a){c[a.status]=(c[a.status]||0)+1;if(a.date===t)td++});
+  var items=[["মোট",ALL.length],["আজ",td],["অপেক্ষমাণ",c.Pending],["নিশ্চিত",c.Confirmed],["সম্পন্ন",c.Completed],["বাতিল",c.Cancelled]];
+  $("stats").innerHTML=items.map(function(i){return '<div class="stat"><b>'+i[1]+'</b><span>'+i[0]+'</span></div>'}).join("");
+}
+function renderChips(){
+  var cnt={};ALL.forEach(function(a){cnt[a.doctor]=(cnt[a.doctor]||0)+1});
+  var cur=$("fDoctor").value;
+  $("chips").innerHTML='<button class="chip'+(cur?'':' on')+'" data-d="">সবাই<small>'+ALL.length+'</small></button>'+
+    Object.keys(cnt).sort().map(function(n){
+      return '<button class="chip'+(cur===n?' on':'')+'" data-d="'+esc(n)+'">'+esc(n)+'<small>'+cnt[n]+'</small></button>'}).join("");
+}
+function cardHTML(a){
+  var opts=STATUSES.map(function(s){return '<option value="'+s+'"'+(s===a.status?' selected':'')+'>'+BN[s]+' ('+s+')</option>'}).join("");
+  return '<article class="card '+esc(a.status)+'" data-id="'+esc(a.id)+'">'+
+   '<div class="c-head"><div><div class="pname">'+esc(a.patient)+'</div><div class="pmeta">বয়স: '+esc(a.age)+' বছর</div></div><div class="id">'+esc(a.id)+'</div></div>'+
+   '<div class="mobile"><a href="tel:'+esc(a.mobile)+'">'+esc(a.mobile)+'</a><button class="btn sm" data-act="phone">কপি</button></div>'+
+   '<div class="doc"><b>'+esc(a.doctor)+'</b><span>'+esc(a.specialty)+'</span></div>'+
+   '<div class="when"><div><small>তারিখ</small><strong>'+esc(niceDate(a.date))+'</strong></div><div><small>সময়</small><strong>'+esc(a.time)+'</strong></div><div><small>ফি</small><strong>৳'+a.fee.toLocaleString("en-US")+'</strong></div></div>'+
+   '<div class="sub-time">আবেদন: '+esc(a.submitted)+'</div>'+
+   '<div class="c-foot"><select class="status '+esc(a.status)+'" data-act="status" aria-label="স্ট্যাটাস">'+opts+'</select><span class="spacer"></span>'+
+   '<button class="btn sm primary" data-act="copy">সব তথ্য কপি</button></div></article>';
+}
+function render(){
+  renderStats();renderChips();
+  view=filtered();
+  $("count").textContent=view.length+" টি অ্যাপয়েন্টমেন্ট দেখানো হচ্ছে (মোট "+ALL.length+")";
+  if(!view.length){$("list").innerHTML='<div class="empty">কোনো অ্যাপয়েন্টমেন্ট পাওয়া যায়নি। ফিল্টার বদলে দেখুন।</div>';return}
+  var byDate={},order=[];
+  view.forEach(function(a){if(!byDate[a.date]){byDate[a.date]=[];order.push(a.date)}byDate[a.date].push(a)});
+  $("list").innerHTML=order.map(function(d){
+    return '<h2 class="group-title">'+esc(niceDate(d))+(d===today()?' <span>আজ</span>':'')+'<span>'+byDate[d].length+' জন</span></h2><div class="grid">'+byDate[d].map(cardHTML).join("")+'</div>';
+  }).join("");
+}
+
+/* ---------- Events ---------- */
+["q","fDate"].forEach(function(id){$(id).addEventListener("input",render)});
+["fDoctor","fStatus"].forEach(function(id){$(id).addEventListener("change",render)});
+$("chips").addEventListener("click",function(e){var b=e.target.closest(".chip");if(!b)return;$("fDoctor").value=b.getAttribute("data-d");render()});
+$("btnRefresh").onclick=function(){load(false)};
+$("btnToday").onclick=function(){$("fDate").value=today();render()};
+$("btnClear").onclick=function(){$("q").value="";$("fDoctor").value="";$("fDate").value="";$("fStatus").value="";render()};
+$("btnCopySheet").onclick=function(){if(!view.length)return toast("কপি করার মতো ডেটা নেই");copyText(tsv(view,true),view.length+" জনের তথ্য কপি হয়েছে — Sheet-এ Paste করুন")};
+$("btnCopyText").onclick=function(){if(!view.length)return toast("কপি করার মতো ডেটা নেই");copyText(view.map(cardText).join("\n\n"),view.length+" জনের তথ্য কপি হয়েছে")};
+
+function findById(id){return ALL.filter(function(a){return a.id===id})[0]}
+$("list").addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]");if(!b||b.tagName==="SELECT")return;
+  var a=findById(b.closest(".card").getAttribute("data-id"));if(!a)return;
+  if(b.getAttribute("data-act")==="phone")copyText(a.mobile,"মোবাইল নম্বর কপি হয়েছে");
+  if(b.getAttribute("data-act")==="copy")copyText(cardText(a),"রোগীর তথ্য কপি হয়েছে");
+});
+$("list").addEventListener("change",function(e){
+  var s=e.target;if(s.getAttribute("data-act")!=="status")return;
+  var a=findById(s.closest(".card").getAttribute("data-id")),old=a.status,val=s.value;
+  a.status=val;render();
+  google.script.run
+    .withSuccessHandler(function(){toast("স্ট্যাটাস আপডেট হয়েছে: "+BN[val])})
+    .withFailureHandler(function(err){a.status=old;render();toast("আপডেট হয়নি: "+(err.message||err))})
+    .updateStatus(a.id,val);
+});
+
+load(false);
+setInterval(function(){if(!document.hidden)load(true)},60000);
+</script>
+</body>
+</html>
