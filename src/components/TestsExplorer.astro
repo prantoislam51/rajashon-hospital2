@@ -65,6 +65,18 @@ const options = [
     </div>
   </div>
 
+  <nav class="tx-pagination" data-pagination aria-label="Tests pagination" hidden>
+    <button type="button" class="tx-page-btn tx-page-prev" data-page-prev data-aria-en="Previous page" data-aria-bn="আগের পাতা" aria-label="Previous page">
+      <Icon name="chevl" size={18} />
+      <span class="l-en">Back</span><span class="l-bn">আগের</span>
+    </button>
+    <div class="tx-page-numbers" data-page-numbers></div>
+    <button type="button" class="tx-page-btn tx-page-next" data-page-next data-aria-en="Next page" data-aria-bn="পরের পাতা" aria-label="Next page">
+      <span class="l-en">Next</span><span class="l-bn">পরের</span>
+      <Icon name="chevr" size={18} />
+    </button>
+  </nav>
+
   <p class="tx-note">
     <Icon name="info" size={16} />
     <span class="l-en">Prices and report times are indicative and may change. Please call before visiting for the latest rates.</span>

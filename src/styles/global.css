@@ -437,6 +437,17 @@ html[lang='bn'] .ttable th { text-transform: none; letter-spacing: 0; font-size:
 .c-rep, .c-prep { color: var(--ink-2); font-size: 0.9rem !important; }
 .cell-l { display: none; }
 
+/* ---------- tests pagination ---------- */
+.tx-pagination { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+.tx-pagination[hidden] { display: none; }
+.tx-page-numbers { display: flex; align-items: center; gap: 6px; }
+.tx-page-btn, .tx-page-num { min-width: 42px; height: 42px; padding: 0 14px; border-radius: var(--r-s); border: 1.5px solid var(--line-2); background: var(--surface); color: var(--ink); font: inherit; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: border-color 0.15s, background-color 0.15s, color 0.15s; }
+.tx-page-num { padding: 0 12px; min-width: 42px; }
+.tx-page-btn:hover:not(:disabled), .tx-page-num:hover:not(.is-active) { border-color: var(--brand); background: var(--brand-soft); color: var(--brand); }
+.tx-page-num.is-active { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); font-weight: 700; cursor: default; }
+.tx-page-btn:disabled { opacity: 0.35; cursor: not-allowed; border-color: var(--line); }
+.tx-page-ellipsis { padding: 0 6px; color: var(--ink-3); font-weight: 600; }
+
 /* ---------- cards: contact / services / reports ---------- */
 .cgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .ccard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); padding: 26px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
@@ -722,6 +733,8 @@ html[lang='bn'] .sumcard dt { text-transform: none; letter-spacing: 0; font-size
   .slider-frame { border-radius: var(--r-m) var(--r-m) var(--r-m) 56px; aspect-ratio: 4 / 3.4; }
   .about-photo img { border-radius: 56px var(--r-m) var(--r-m) var(--r-m); }
   .about-badge { left: 10px; bottom: 14px; padding: 10px 14px; }
+  .tx-pagination { gap: 6px; margin-top: 18px; }
+  .tx-page-btn, .tx-page-num { height: 38px; min-width: 38px; padding: 0 10px; font-size: 0.9rem; }
   .book-aside { grid-template-columns: 1fr; }
   .book-filters { grid-template-columns: 1fr; gap: 14px; }
   .bpanel { padding: 20px 16px; }
