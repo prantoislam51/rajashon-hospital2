@@ -54,7 +54,9 @@ export const doctors: Doctor[] = [
       en: 'Treats fever, diabetes, high blood pressure, gastric and liver problems, and long-term illnesses in adults.',
       bn: 'জ্বর, ডায়াবেটিস, উচ্চ রক্তচাপ, গ্যাস্ট্রিক, লিভারের সমস্যা ও প্রাপ্তবয়স্কদের দীর্ঘমেয়াদি রোগের চিকিৎসা করেন।',
     },
-    photo: '', featured: true,
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-anwar.jpg')
+    photo: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
+    featured: true,
   },
   {
     slug: 'dr-sample-gynae',
@@ -71,7 +73,9 @@ export const doctors: Doctor[] = [
       en: 'Antenatal and postnatal care, normal and caesarean delivery, menstrual and fertility problems.',
       bn: 'গর্ভকালীন ও প্রসবোত্তর সেবা, নরমাল ও সিজারিয়ান ডেলিভারি, মাসিক ও বন্ধ্যাত্ব সংক্রান্ত সমস্যার চিকিৎসা।',
     },
-    photo: '', featured: true,
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-nusrat.jpg')
+    photo: 'https://images.unsplash.com/photo-1594824813629-8736a88b56f8?auto=format&fit=crop&w=800&q=80',
+    featured: true,
   },
   {
     slug: 'dr-sample-child',
@@ -88,7 +92,9 @@ export const doctors: Doctor[] = [
       en: 'Newborn care, vaccination, growth and nutrition, childhood fever, cough, diarrhoea and allergy.',
       bn: 'নবজাতকের যত্ন, টিকা, শিশুর বৃদ্ধি ও পুষ্টি, জ্বর, কাশি, ডায়রিয়া ও অ্যালার্জির চিকিৎসা।',
     },
-    photo: '', featured: true,
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-tanvir.jpg')
+    photo: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=800&q=80',
+    featured: true,
   },
   {
     slug: 'dr-sample-cardiology',
@@ -105,7 +111,9 @@ export const doctors: Doctor[] = [
       en: 'Chest pain, high blood pressure, heart failure, rhythm problems; ECG and echocardiography review.',
       bn: 'বুকে ব্যথা, উচ্চ রক্তচাপ, হার্ট ফেইলিউর, হৃদস্পন্দনের সমস্যা; ইসিজি ও ইকো রিপোর্ট পর্যালোচনা।',
     },
-    photo: '', featured: true,
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-shafiqul.jpg')
+    photo: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=800&q=80',
+    featured: true,
   },
   {
     slug: 'dr-sample-surgery',
@@ -122,7 +130,8 @@ export const doctors: Doctor[] = [
       en: 'Hernia, appendix, gallstone, piles and other general surgical problems.',
       bn: 'হার্নিয়া, অ্যাপেন্ডিক্স, পিত্তথলির পাথর, পাইলসসহ সাধারণ সার্জারির চিকিৎসা।',
     },
-    photo: '',
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-kamrul.jpg')
+    photo: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=800&q=80',
   },
   {
     slug: 'dr-sample-ortho',
@@ -139,7 +148,8 @@ export const doctors: Doctor[] = [
       en: 'Fractures, joint and back pain, sports injury and bone disorders.',
       bn: 'হাড় ভাঙা, জয়েন্ট ও কোমরের ব্যথা, খেলাধুলার আঘাত ও হাড়ের রোগের চিকিৎসা।',
     },
-    photo: '',
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-mizanur.jpg')
+    photo: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80',
   },
   {
     slug: 'dr-sample-skin',
@@ -156,7 +166,8 @@ export const doctors: Doctor[] = [
       en: 'Eczema, acne, fungal infection, allergy, hair and nail problems.',
       bn: 'একজিমা, ব্রণ, ফাঙ্গাল ইনফেকশন, অ্যালার্জি এবং চুল ও নখের সমস্যার চিকিৎসা।',
     },
-    photo: '',
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-farhana.jpg')
+    photo: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80',
   },
   {
     slug: 'dr-sample-ent',
@@ -173,7 +184,8 @@ export const doctors: Doctor[] = [
       en: 'Sinusitis, tonsil, ear infection, hearing problems, nasal and throat disorders.',
       bn: 'সাইনাস, টনসিল, কানের ইনফেকশন, শ্রবণ সমস্যা এবং নাক ও গলার রোগের চিকিৎসা।',
     },
-    photo: '',
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-rezaul.jpg')
+    photo: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
   },
   {
     slug: 'dr-sample-neuro',
@@ -190,7 +202,8 @@ export const doctors: Doctor[] = [
       en: 'Headache, migraine, epilepsy, stroke follow-up, numbness and nerve-related problems.',
       bn: 'মাথাব্যথা, মাইগ্রেন, মৃগীরোগ, স্ট্রোক-পরবর্তী ফলো-আপ, অসাড়তা ও স্নায়ুজনিত সমস্যার চিকিৎসা।',
     },
-    photo: '',
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-sabrina.jpg')
+    photo: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&w=800&q=80',
   },
   {
     slug: 'dr-sample-radiology',
@@ -207,7 +220,8 @@ export const doctors: Doctor[] = [
       en: 'Performs and reports ultrasonography and X-ray studies for all age groups.',
       bn: 'সব বয়সের রোগীর আল্ট্রাসনোগ্রাফি ও এক্স-রে পরীক্ষা এবং রিপোর্ট প্রদান করেন।',
     },
-    photo: '',
+    // 📸 DOCTOR PHOTO: Change URL or local file path (e.g. '/images/doctors/dr-asif.jpg')
+    photo: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=800&q=80',
   },
 ];
 

@@ -8,15 +8,13 @@ import { site, images } from '../data/site';
 import { doctors } from '../data/doctors';
 import { tests } from '../data/tests';
 import { num } from '../lib/i18n';
+import { services } from '../data/services';
 
-const gallery = [
-  { img: '/images/services/opd.svg', title: { en: 'Doctor consultation', bn: 'ডাক্তারের পরামর্শ' }, text: { en: 'Specialists from medicine, gynecology, pediatrics, surgery and more sit on fixed days. Patients get a serial in advance, so waiting is shorter and calmer.', bn: 'মেডিসিন, গাইনি, শিশু, সার্জারিসহ বিভিন্ন বিভাগের বিশেষজ্ঞ নির্দিষ্ট দিনে বসেন। আগেই সিরিয়াল পাওয়ায় অপেক্ষা কম ও স্বস্তিদায়ক।' } },
-  { img: '/images/services/pathology.svg', title: { en: 'Pathology laboratory', bn: 'প্যাথলজি ল্যাবরেটরি' }, text: { en: 'Blood, urine, stool, hormone and culture tests are processed in-house. Each test lists its price, report time and preparation on our website.', bn: 'রক্ত, প্রস্রাব, মল, হরমোন ও কালচার পরীক্ষা নিজস্ব ল্যাবে হয়। প্রতিটি টেস্টের মূল্য, রিপোর্টের সময় ও প্রস্তুতি আমাদের ওয়েবসাইটে দেওয়া আছে।' } },
-  { img: '/images/services/xray.svg', title: { en: 'X-ray', bn: 'এক্স-রে' }, text: { en: 'Chest, abdomen, spine and limb X-rays are taken by trained technicians and reported on the same visit.', bn: 'বুক, পেট, মেরুদণ্ড ও হাত-পায়ের এক্স-রে প্রশিক্ষিত টেকনিশিয়ান করেন এবং একই ভিজিটে রিপোর্ট দেওয়া হয়।' } },
-  { img: '/images/services/usg.svg', title: { en: 'Ultrasonography', bn: 'আল্ট্রাসনোগ্রাফি' }, text: { en: 'Abdominal, pelvic and pregnancy scans in a quiet, private room, with a radiologist’s report.', bn: 'শান্ত ও গোপনীয় কক্ষে পেট, পেলভিস ও গর্ভাবস্থার স্ক্যান, সঙ্গে রেডিওলজিস্টের রিপোর্ট।' } },
-  { img: '/images/services/ecg.svg', title: { en: 'ECG & echocardiography', bn: 'ইসিজি ও ইকোকার্ডিওগ্রাফি' }, text: { en: 'Heart tests for chest pain, blood pressure and routine health checks, with specialist review.', bn: 'বুকে ব্যথা, রক্তচাপ ও রুটিন চেকআপের জন্য হৃদরোগ পরীক্ষা, বিশেষজ্ঞের পর্যালোচনাসহ।' } },
-  { img: '/images/services/emergency.svg', title: { en: 'Emergency & ambulance', bn: 'জরুরি সেবা ও অ্যাম্বুলেন্স' }, text: { en: 'In an emergency, call our serial numbers first so the team can prepare before you arrive.', bn: 'জরুরি অবস্থায় আগে আমাদের সিরিয়াল নম্বরে কল করুন, যাতে আপনি পৌঁছানোর আগেই টিম প্রস্তুত থাকতে পারে।' } },
-];
+const gallery = services.filter((s) => s.image).map((s) => ({
+  img: s.image!,
+  title: s.title,
+  text: s.text,
+}));
 const values = [
   { icon: 'shield', t: { en: 'Honest information', bn: 'সৎ তথ্য' }, d: { en: 'Doctor schedules and test prices are published openly and kept current.', bn: 'ডাক্তারের সময়সূচি ও টেস্ট মূল্য খোলাখুলি প্রকাশিত এবং হালনাগাদ থাকে।' } },
   { icon: 'clock', t: { en: 'Respect for time', bn: 'সময়ের প্রতি সম্মান' }, d: { en: 'Serials in advance and clear report times so you plan your day.', bn: 'আগাম সিরিয়াল ও স্পষ্ট রিপোর্টের সময়, যাতে আপনি দিনের পরিকল্পনা করতে পারেন।' } },

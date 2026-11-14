@@ -11,32 +11,44 @@ export type Service = {
 
 export const services: Service[] = [
   {
-    key: 'opd', icon: 'stethoscope', image: '/images/services/opd.svg',
+    key: 'opd', icon: 'stethoscope',
+    // 📸 SERVICE PHOTO: Outdoor Consultation / Doctor Chamber
+    image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80',
     title: { en: 'Outdoor Consultation', bn: 'আউটডোর চিকিৎসা' },
     text: { en: 'Consult specialist doctors by serial. Check each doctor’s weekly schedule and book ahead.', bn: 'সিরিয়ালের মাধ্যমে বিশেষজ্ঞ ডাক্তারের পরামর্শ। প্রতিটি ডাক্তারের সাপ্তাহিক সময়সূচি দেখে আগেই সিরিয়াল নিন।' },
   },
   {
-    key: 'pathology', icon: 'flask', image: '/images/services/pathology.svg',
+    key: 'pathology', icon: 'flask',
+    // 📸 SERVICE PHOTO: Pathology Laboratory
+    image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=1200&q=80',
     title: { en: 'Pathology Laboratory', bn: 'প্যাথলজি ল্যাবরেটরি' },
     text: { en: 'Hematology, biochemistry, hormone, serology, urine, stool and culture tests.', bn: 'হেমাটোলজি, বায়োকেমিস্ট্রি, হরমোন, সেরোলজি, প্রস্রাব, মল ও কালচার পরীক্ষা।' },
   },
   {
-    key: 'xray', icon: 'xray', image: '/images/services/xray.svg',
+    key: 'xray', icon: 'xray',
+    // 📸 SERVICE PHOTO: X-Ray
+    image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1200&q=80',
     title: { en: 'X-Ray', bn: 'এক্স-রে' },
     text: { en: 'Chest, abdomen, spine, skull and limb X-rays with same-visit reports.', bn: 'বুক, পেট, মেরুদণ্ড, মাথা ও হাত-পায়ের এক্স-রে, একই ভিজিটে রিপোর্ট।' },
   },
   {
-    key: 'usg', icon: 'usg', image: '/images/services/usg.svg',
+    key: 'usg', icon: 'usg',
+    // 📸 SERVICE PHOTO: Ultrasonography
+    image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80',
     title: { en: 'Ultrasonography', bn: 'আল্ট্রাসনোগ্রাফি' },
     text: { en: 'Abdomen, pelvis, pregnancy, thyroid and small-parts ultrasound.', bn: 'পেট, পেলভিস, গর্ভাবস্থা, থাইরয়েডসহ বিভিন্ন অঙ্গের আল্ট্রাসনোগ্রাফি।' },
   },
   {
-    key: 'ecg', icon: 'pulse', image: '/images/services/ecg.svg',
+    key: 'ecg', icon: 'pulse',
+    // 📸 SERVICE PHOTO: ECG & Echocardiography
+    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
     title: { en: 'ECG & Echocardiography', bn: 'ইসিজি ও ইকোকার্ডিওগ্রাফি' },
     text: { en: 'Heart tracing and echo with specialist review for chest pain and BP.', bn: 'বুকে ব্যথা ও উচ্চ রক্তচাপের রোগীর জন্য ইসিজি, ইকো ও বিশেষজ্ঞ পর্যালোচনা।' },
   },
   {
-    key: 'emergency', icon: 'ambulance', image: '/images/services/emergency.svg',
+    key: 'emergency', icon: 'ambulance',
+    // 📸 SERVICE PHOTO: Emergency & Ambulance
+    image: 'https://images.unsplash.com/photo-1587745416684-47953f16f02f?auto=format&fit=crop&w=1200&q=80',
     title: { en: 'Emergency & Ambulance', bn: 'জরুরি সেবা ও অ্যাম্বুলেন্স' },
     text: { en: 'Call ahead for emergency care and ambulance support.', bn: 'জরুরি চিকিৎসা ও অ্যাম্বুলেন্স সহায়তার জন্য আগে থেকে কল করুন।' },
   },

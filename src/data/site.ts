@@ -51,15 +51,43 @@ export const site = {
 };
 
 /**
- * Photos. The files below are placeholder illustrations.
- * To use real photos: put your .jpg/.webp files in /public/images/ and change the `src` paths here.
+ * 📸 PHOTOS & IMAGES CONFIGURATION
+ *
+ * You can use:
+ * 1. Direct Web URLs (e.g. 'https://cdn.example.com/photo.jpg')
+ * 2. Local files in /public/images/ (e.g. '/images/slides/my-slide.jpg')
+ *
+ * Search for "📸" anywhere in src/data/ to quickly jump to image settings.
  */
 export const images = {
-  building: '/images/about/building.svg',
+  // 📸 HOSPITAL BUILDING PHOTO: Shown on Homepage & About page
+  building: 'https://cdn.britannica.com/12/130512-004-AD0A7CA4/campus-Riverside-Ottawa-The-Hospital-Ont.jpg',
+
+  // 📸 HERO SLIDER PHOTOS: Shown on Homepage main slider banner
   slides: [
-    { src: '/images/slides/slide-1.svg', title: { en: 'Our hospital building', bn: 'আমাদের হসপিটাল ভবন' } as Bi, text: { en: 'Easy to reach on Birulia Road, Savar.', bn: 'সাভারের বিরুলিয়া রোডে সহজে পৌঁছানো যায়।' } as Bi },
-    { src: '/images/slides/slide-2.svg', title: { en: 'Pathology laboratory', bn: 'প্যাথলজি ল্যাবরেটরি' } as Bi, text: { en: 'Blood, urine and stool tests with timely reports.', bn: 'রক্ত, প্রস্রাব ও মলের পরীক্ষা, নির্দিষ্ট সময়ে রিপোর্ট।' } as Bi },
-    { src: '/images/slides/slide-3.svg', title: { en: 'X-ray & ultrasonography', bn: 'এক্স-রে ও আল্ট্রাসনোগ্রাফি' } as Bi, text: { en: 'Imaging handled by trained technicians and radiologists.', bn: 'প্রশিক্ষিত টেকনিশিয়ান ও রেডিওলজিস্টের মাধ্যমে ইমেজিং।' } as Bi },
-    { src: '/images/slides/slide-4.svg', title: { en: 'Doctors & patient care', bn: 'ডাক্তার ও রোগীসেবা' } as Bi, text: { en: 'Specialist consultation with a clear serial system.', bn: 'সুস্পষ্ট সিরিয়াল ব্যবস্থায় বিশেষজ্ঞ চিকিৎসা।' } as Bi },
+    {
+      // 📸 SLIDE 1: আমাদের হসপিটাল ভবন (Our hospital building)
+      src: 'https://cdn.britannica.com/12/130512-004-AD0A7CA4/campus-Riverside-Ottawa-The-Hospital-Ont.jpg',
+      title: { en: 'Our hospital building', bn: 'আমাদের হসপিটাল ভবন' } as Bi,
+      text: { en: 'Easy to reach on Birulia Road, Savar.', bn: 'সাভারের বিরুলিয়া রোডে সহজে পৌঁছানো যায়।' } as Bi,
+    },
+    {
+      // 📸 SLIDE 2: প্যাথলজি ল্যাবরেটরি (Pathology laboratory)
+      src: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=1600&q=80',
+      title: { en: 'Pathology laboratory', bn: 'প্যাথলজি ল্যাবরেটরি' } as Bi,
+      text: { en: 'Blood, urine and stool tests with timely reports.', bn: 'রক্ত, প্রস্রাব ও মলের পরীক্ষা, নির্দিষ্ট সময়ে রিপোর্ট।' } as Bi,
+    },
+    {
+      // 📸 SLIDE 3: এক্স-রে ও আল্ট্রাসনোগ্রাফি (X-ray & ultrasonography)
+      src: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1600&q=80',
+      title: { en: 'X-ray & ultrasonography', bn: 'এক্স-রে ও আল্ট্রাসনোগ্রাফি' } as Bi,
+      text: { en: 'Imaging handled by trained technicians and radiologists.', bn: 'প্রশিক্ষিত টেকনিশিয়ান ও রেডিওলজিস্টের মাধ্যমে ইমেজিং।' } as Bi,
+    },
+    {
+      // 📸 SLIDE 4: ডাক্তার ও রোগীসেবা (Doctors & patient care)
+      src: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=1600&q=80',
+      title: { en: 'Doctors & patient care', bn: 'ডাক্তার ও রোগীসেবা' } as Bi,
+      text: { en: 'Specialist consultation with a clear serial system.', bn: 'সুস্পষ্ট সিরিয়াল ব্যবস্থায় বিশেষজ্ঞ চিকিৎসা।' } as Bi,
+    },
   ],
 };

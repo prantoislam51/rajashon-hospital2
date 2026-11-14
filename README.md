@@ -308,16 +308,119 @@ The footer contains:
 
 ## Content and asset editing guide
 
-Update the following files instead of editing repeated page markup:
+All site content, images, doctor profiles, service details, and test pricing are centralized in `src/data/` so you can update them in one place without touching page HTML or Astro components.
 
-- `src/data/site.ts`: hospital name, phone numbers, WhatsApp, email, address, hours, emergency text, demo banner, and image paths
-- `src/data/doctors.ts`: doctor names, specialties, degrees, BMDC numbers, schedules, featured flags, and portraits
-- `src/data/services.ts`: clinical services and report categories
-- `src/data/tests.ts`: test names, categories, prices, preparation, and report timing
-- `public/images/`: hospital, slider, doctor, service, and icon assets
-- `src/styles/global.css`: design tokens and visual system
+### 📸 How to update images and photos (ছবি পরিবর্তনের নিয়ম)
 
-Before publishing, replace sample doctor/test/price data and set `showDemoBanner` to `false` in `src/data/site.ts`.
+> **Quick Tip:** Search for the emoji **`📸`** across the project (or in your editor using `Ctrl+Shift+F` / `Cmd+Shift+F`) to instantly jump to every image setting in the code!
+
+You can use **either**:
+1. **Direct Web URLs (অনলাইন লিঙ্ক):** Paste any direct image link (`https://...`). Works with any image hosting, CDN, or cloud storage (e.g., Unsplash, Cloudinary, Imgur, direct server URLs).
+2. **Local files (লোকাল ফাইল):** Put your image file inside `public/images/` and use the relative path (e.g., `photo: '/images/doctors/dr-name.jpg'`).
+
+---
+
+#### 1. Hospital Building Photo (আমাদের হসপিটাল ভবন)
+- **File:** `src/data/site.ts`
+- **Location:** `images.building`
+- **Where it appears:**
+  - Homepage ("About our hospital" section)
+  - About page (`/about`)
+- **Example:**
+  ```ts
+  // 📸 HOSPITAL BUILDING PHOTO: Shown on Homepage & About page
+  building: 'https://cdn.britannica.com/12/130512-004-AD0A7CA4/campus-Riverside-Ottawa-The-Hospital-Ont.jpg',
+  ```
+
+---
+
+#### 2. Hero Slider / Banner Photos (হোমপেজ স্লাইডার ব্যানার)
+- **File:** `src/data/site.ts`
+- **Location:** `images.slides`
+- **Where it appears:** Main hero carousel on the homepage (`/`)
+- **Configured slides:**
+  - **Slide 1:** আমাদের হসপিটাল ভবন (Our hospital building)
+  - **Slide 2:** প্যাথলজি ল্যাবরেটরি (Pathology laboratory)
+  - **Slide 3:** এক্স-রে ও আল্ট্রাসনোগ্রাফি (X-ray & ultrasonography)
+  - **Slide 4:** ডাক্তার ও রোগীসেবা (Doctors & patient care)
+- **Example:**
+  ```ts
+  slides: [
+    {
+      // 📸 SLIDE 1: আমাদের হসপিটাল ভবন (Our hospital building)
+      src: 'https://cdn.britannica.com/12/130512-004-AD0A7CA4/campus-Riverside-Ottawa-The-Hospital-Ont.jpg',
+      title: { en: 'Our hospital building', bn: 'আমাদের হসপিটাল ভবন' } as Bi,
+      text: { en: 'Easy to reach on Birulia Road, Savar.', bn: 'সাভারের বিরুলিয়া রোডে সহজে পৌঁছানো যায়।' } as Bi,
+    },
+    ...
+  ]
+  ```
+
+---
+
+#### 3. Doctor Photos & Profiles (ডাক্তারদের ছবি ও প্রোফাইল)
+- **File:** `src/data/doctors.ts`
+- **Location:** `doctors` array -> `photo` field of each doctor
+- **Where it appears:**
+  - Homepage featured doctor cards
+  - Doctors page directory (`/doctors`)
+  - Doctor profile modal popup
+  - Appointment booking summary card (`/appointment`)
+- **Example:**
+  ```ts
+  {
+    slug: 'dr-sample-medicine',
+    name: { en: 'Dr. Md. Anwar Hossain', bn: 'ডা. মো. আনোয়ার হোসেন' },
+    // 📸 DOCTOR PHOTO: Change URL or local file path
+    photo: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
+    specialty: { en: 'Medicine Specialist', bn: 'মেডিসিন বিশেষজ্ঞ' },
+    ...
+  }
+  ```
+  *(Note: If `photo` is left empty `''`, a clean neutral silhouette illustration is automatically shown.)*
+
+---
+
+#### 4. Service Photos (ডায়াগনস্টিক ও ক্লিনিক্যাল সেবা)
+- **File:** `src/data/services.ts`
+- **Location:** `services` array -> `image` field
+- **Where it appears:**
+  - Services page (`/services`)
+  - About page photo story (`/about`)
+- **Services with photos:**
+  - `opd`: Outdoor Consultation / Chamber (আউটডোর চিকিৎসা)
+  - `pathology`: Pathology Laboratory (প্যাথলজি ল্যাবরেটরি)
+  - `xray`: X-Ray (এক্স-রে)
+  - `usg`: Ultrasonography (আল্ট্রাসনোগ্রাফি)
+  - `ecg`: ECG & Echocardiography (ইসিজি ও ইকোকার্ডিওগ্রাফি)
+  - `emergency`: Emergency & Ambulance (জরুরি সেবা ও অ্যাম্বুলেন্স)
+
+---
+
+### 📝 How to update other hospital information
+
+| What to update | File to edit | Details |
+|---|---|---|
+| **Hospital Name, Address & Map** | `src/data/site.ts` | `site.name`, `site.address`, `site.landmark`, `site.mapQuery` |
+| **Phone Numbers & WhatsApp** | `src/data/site.ts` | `site.phones`, `site.whatsapp` (receives online appointment requests) |
+| **Opening Hours & Emergency** | `src/data/site.ts` | `site.hours`, `site.emergency` |
+| **Demo Notice Banner** | `src/data/site.ts` | Set `showDemoBanner: false` before going live |
+| **Doctors, Degrees & Fees** | `src/data/doctors.ts` | `name`, `specialty`, `degrees`, `days`, `time`, `fee`, `about` |
+| **Tests, Categories & Prices** | `src/data/tests.ts` | `name`, `cat`, `price` (in BDT), `report` (turnaround time), `prep` |
+| **Services & Facilities** | `src/data/services.ts` | `title`, `text`, `icon`, `image` |
+
+### 🚀 Verifying your changes locally
+
+After updating any image URL or file:
+1. Run the development server:
+   ```bash
+   npm run dev
+   ```
+2. Open `http://localhost:4321` in your browser.
+3. Test static build before deploying:
+   ```bash
+   npm run build
+   ```
 
 ## AI handoff checklist
 
